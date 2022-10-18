@@ -9,6 +9,7 @@ import android.os.Handler
 import android.os.HandlerThread
 import android.os.Looper
 import android.util.Log
+import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.github.mikephil.charting.data.LineData
@@ -24,6 +25,8 @@ class DemoApp : AppCompatActivity() {
     lateinit var dataSet_res_accel_x: LineDataSet
     lateinit var dataSet_res_accel_y: LineDataSet
     lateinit var dataSet_res_accel_z: LineDataSet
+
+    lateinit var classifiedMovement: ActionEnum
 
     var time = 0f
     lateinit var allRespeckData: LineData
@@ -77,8 +80,9 @@ class DemoApp : AppCompatActivity() {
 
     }
 
-    fun setupPage() {
-
+    private fun setupPage() {
+        var classifiedMovementField : TextView = findViewById(R.id.movement)
+        classifiedMovementField.text = ActionEnum.LYING_DOWN_ON_THE_BACK.movement
     }
 
 
