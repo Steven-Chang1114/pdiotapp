@@ -44,46 +44,111 @@
             app:layout_constraintStart_toStartOf="@+id/welcome_msg"
             app:layout_constraintTop_toBottomOf="@+id/welcome_msg" />
 
-        <Button
-            android:id="@+id/record_button"
-            android:layout_width="550px"
-            android:layout_height="wrap_content"
-            android:background="#03A9F4"
-            android:text="Record data"
-            android:textColor="#FFFFFF"
-            tools:layout_editor_absoluteX="101dp"
-            tools:layout_editor_absoluteY="180dp" />
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/upperlayout"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="100dp"
+            app:layout_constraintBottom_toTopOf="@+id/constraintLayout2"
+            app:layout_constraintTop_toBottomOf="@+id/textView2">
 
-        <Button
-            android:id="@+id/live_button"
-            android:layout_width="550px"
-            android:layout_height="wrap_content"
-            android:background="#03A9F4"
-            android:text="Watch live processing"
-            android:textColor="#FFFFFF"
-            tools:layout_editor_absoluteX="101dp"
-            tools:layout_editor_absoluteY="289dp" />
+            <TableLayout
+                android:id="@+id/tableLayout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
-        <Button
-            android:id="@+id/ble_button"
-            android:layout_width="550px"
-            android:layout_height="wrap_content"
-            android:background="#03A9F4"
-            android:text="Connect sensors"
-            android:textColor="#FFFFFF"
-            tools:layout_editor_absoluteX="101dp"
-            tools:layout_editor_absoluteY="398dp" />
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal">
+
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
+
+                            <Button
+                                android:id="@+id/record_button"
+                                android:layout_width="120dp"
+                                android:layout_height="200dp"
+                                android:layout_marginLeft="30dp"
+                                android:background="@drawable/record_button"
+                                android:text="Record data"
+                                android:textColor="#FFFFFF"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintHorizontal_bias="0.0"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent"
+                                app:layout_constraintVertical_bias="0.0" />
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal">
+
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
+
+                            <Button
+                                android:id="@+id/live_button"
+                                android:layout_width="120dp"
+                                android:layout_height="200dp"
+                                android:background="@drawable/live_button"
+                                android:layout_marginLeft="30dp"
+                                android:text="Watch live processing"
+                                android:textColor="#FFFFFF"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent" />
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal">
+
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
+
+                            <Button
+                                android:id="@+id/ble_button"
+                                android:layout_width="120dp"
+                                android:layout_height="200dp"
+                                android:background="@drawable/sensor_button"
+                                android:layout_marginLeft="30dp"
+                                android:text="Connect sensors"
+                                android:textColor="#FFFFFF"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent" />
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+                    </LinearLayout>
+                </TableRow>
+
+            </TableLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constraintLayout2"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_marginTop="30dp"
-            android:background="#D7C0AE"
+            android:background="@drawable/lower_background"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/ble_button">
+            app:layout_constraintTop_toBottomOf="@+id/upperlayout">
 
             <Button
                 android:id="@+id/history_button"
