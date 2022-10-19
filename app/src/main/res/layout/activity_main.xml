@@ -74,7 +74,7 @@
                         android:layout_height="200dp"
                         android:layout_marginLeft="30dp"
                         android:background="@drawable/record_button"
-                        android:text="Record data"
+                        android:text="Record data \n"
                         android:textColor="#FFF5E4" />
 
                     <Button
@@ -83,7 +83,7 @@
                         android:layout_height="200dp"
                         android:layout_marginLeft="30dp"
                         android:background="@drawable/live_button"
-                        android:text="Record data"
+                        android:text="Watch Live Processing"
                         android:textColor="#FFF5E4" />
 
                     <Button
@@ -93,7 +93,7 @@
                         android:layout_marginLeft="30dp"
                         android:layout_marginRight="30dp"
                         android:background="@drawable/sensor_button"
-                        android:text="Record data"
+                        android:text="Connect Sensor"
                         android:textColor="#FFF5E4" />
 
 
