@@ -11,16 +11,37 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+
+        <TextView
+            android:id="@+id/welcome_msg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif"
+            android:text="Welcome {user}"
+            android:textSize="30sp"
+            android:textStyle="bold"
+            android:typeface="sans"
+            android:layout_marginTop="100px"
+            android:layout_marginRight="400px"
+            app:layout_constraintBottom_toTopOf="@+id/textView2"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
         <TextView
             android:id="@+id/textView2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="100px"
-            android:text="I want to"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toTopOf="@+id/record_button"/>
+            android:layout_marginTop="0px"
+            android:fontFamily="sans-serif"
+            android:text="What do you want to do"
+
+            android:textStyle="bold"
+            android:typeface="sans"
+            app:layout_constraintBottom_toTopOf="@+id/record_button"
+            app:layout_constraintEnd_toEndOf="@+id/welcome_msg"
+            app:layout_constraintStart_toStartOf="@+id/welcome_msg"
+            app:layout_constraintTop_toBottomOf="@+id/welcome_msg" />
 
         <Button
             android:id="@+id/record_button"
