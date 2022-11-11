@@ -99,26 +99,26 @@ class DemoApp : AppCompatActivity() {
     }
 
     private fun classifyMovement(floatArrayBuffer: FloatBuffer) {
-        if (counter < 50) {
-            return updatePage(lastMovement)
-        }
-
-        val inputArray = floatArrayBuffer.array().sliceArray(IntRange(0, 299))
-        val inputFeature0 = TensorBuffer.createFixedSize(intArrayOf(1, 50, 6), DataType.FLOAT32)
-        inputFeature0.loadArray(inputArray)
-
-        counter = 0
-        floatArrayBuffer.clear()
-
-        val output = model.process(inputFeature0).outputFeature0AsTensorBuffer.floatArray
-
-        val movementIdx = output.indexOf(output.max()!!)
-
-        Log.i("OUTPUT", "Predicted movement is ${movementIdx}")
-        val currentMovement = selectMovements(movementIdx)
-
-        lastMovement = currentMovement
-        updatePage(currentMovement)
+//        if (counter < 50) {
+//            return updatePage(lastMovement)
+//        }
+//
+//        val inputArray = floatArrayBuffer.array().sliceArray(IntRange(0, 299))
+//        val inputFeature0 = TensorBuffer.createFixedSize(intArrayOf(1, 50, 6), DataType.FLOAT32)
+//        inputFeature0.loadArray(inputArray)
+//
+//        counter = 0
+//        floatArrayBuffer.clear()
+//
+//        val output = model.process(inputFeature0).outputFeature0AsTensorBuffer.floatArray
+//
+//        val movementIdx = output.indexOf(output.max()!!)
+//
+//        Log.i("OUTPUT", "Predicted movement is ${movementIdx}")
+//        val currentMovement = selectMovements(movementIdx)
+//
+//        lastMovement = currentMovement
+//        updatePage(currentMovement)
     }
 
     private fun selectMovements(idx: Int) : ActionEnum {

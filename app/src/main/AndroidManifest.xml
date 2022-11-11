@@ -33,6 +33,7 @@
 
         <activity
             android:name=".live.LiveDataActivity"
+            android:exported="true"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="com.specknet.respeck.RESPECK_LIVE_BROADCAST" />
@@ -51,9 +52,11 @@
             </intent-filter>
         </activity>
         <activity
+            android:exported="true"
             android:name=".barcode.BarcodeActivity"
             android:screenOrientation="portrait" />
         <activity
+            android:exported="true"
             android:name=".bluetooth.ConnectingActivity"
             android:screenOrientation="portrait">
             <intent-filter>
@@ -64,6 +67,7 @@
             </intent-filter>
         </activity>
         <activity
+            android:exported="true"
             android:name=".demo.DemoApp"
             android:screenOrientation="portrait">
             <intent-filter>
@@ -84,6 +88,7 @@
         </activity>
 
         <activity
+            android:exported="true"
             android:name=".MainActivity"
             android:screenOrientation="portrait">
             <intent-filter>
