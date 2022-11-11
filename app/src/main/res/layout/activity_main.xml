@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/coordinatorLayout"
-    tools:context=".MainPage">
+    tools:context=".MainActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -41,6 +41,7 @@
             android:typeface="sans"
             app:layout_constraintBottom_toTopOf="@+id/upperlayout"
             app:layout_constraintEnd_toEndOf="@+id/welcome_msg"
+            app:layout_constraintHorizontal_bias="0.44"
             app:layout_constraintStart_toStartOf="@+id/welcome_msg"
             app:layout_constraintTop_toBottomOf="@+id/welcome_msg" />
 
@@ -68,6 +69,15 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:orientation="horizontal">
+
+                    <Button
+                        android:id="@+id/demo_button"
+                        android:layout_width="120dp"
+                        android:layout_height="200dp"
+                        android:layout_marginLeft="30dp"
+                        android:background="@drawable/demo_button"
+                        android:text="Demo Presentation"
+                        android:textColor="#FFF5E4" />
 
 
                     <Button
@@ -139,18 +149,18 @@
                 android:background="@drawable/history_button"
                 android:text="Historical Data"
                 android:textColor="#594545"
-                app:layout_constraintBottom_toTopOf="@+id/demo_button"
+                app:layout_constraintBottom_toTopOf="@+id/signout_button"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView3" />
 
             <Button
-                android:id="@+id/demo_button"
+                android:id="@+id/signout_button"
                 android:layout_width="300dp"
                 android:layout_height="50dp"
                 android:layout_marginBottom="30dp"
-                android:background="@drawable/demo_button"
-                android:text="Demo Presentation"
+                android:background="@drawable/signout_button"
+                android:text="Sign out"
                 android:textColor="#594545"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"

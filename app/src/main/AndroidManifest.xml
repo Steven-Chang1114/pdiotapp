@@ -89,7 +89,7 @@
 
         <activity
             android:exported="true"
-            android:name=".MainActivity"
+            android:name=".HomePage"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="com.specknet.respeck.RESPECK_LIVE_BROADCAST" />
@@ -124,7 +124,7 @@
             android:name=".RecordingActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".MainPage"
+            android:name=".MainActivity"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
