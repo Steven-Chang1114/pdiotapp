@@ -11,6 +11,7 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.NFC" />
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
 
     <uses-feature
         android:name="android.hardware.bluetooth_le"
@@ -81,6 +82,26 @@
             </intent-filter>
         </activity>
 
+        <activity
+            android:name=".MainActivity"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="com.specknet.respeck.RESPECK_LIVE_BROADCAST" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="com.specknet.respeck.ACTION_RESPECK_LIVE_BROADCAST" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="com.specknet.respeck.ACTION_RESPECK_REHAB_BROADCAST" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="com.specknet.respeck.RESPECK_REHAB_BROADCAST" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="com.specknet.pdiotapp.RESPECK_BROADCAST" />
+            </intent-filter>
+        </activity>
+
         <service
             android:name=".bluetooth.BluetoothService"
             android:enabled="true"
@@ -97,7 +118,7 @@
             android:name=".RecordingActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".MainActivity"
+            android:name=".MainPage"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

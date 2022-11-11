@@ -184,7 +184,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        System.exit(0)
+//        System.exit(0)
     }
 
     override fun onRequestPermissionsResult(
