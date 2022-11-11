@@ -12,8 +12,13 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Button
+import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount
+import com.google.android.gms.auth.api.signin.GoogleSignInClient
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.material.snackbar.Snackbar
 import com.specknet.pdiotapp.bluetooth.BluetoothSpeckService
 import com.specknet.pdiotapp.bluetooth.ConnectingActivity
@@ -31,6 +36,10 @@ class MainActivity : AppCompatActivity() {
     lateinit var pairingButton: Button
     lateinit var recordButton: Button
     lateinit var demoButton: Button
+
+    lateinit var welcomeMsg: TextView
+    lateinit var gso : GoogleSignInOptions
+    lateinit var gsc: GoogleSignInClient
 
     // permissions
     lateinit var permissionAlertDialog: AlertDialog.Builder
@@ -51,6 +60,9 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail().build()
+        gsc = GoogleSignIn.getClient(this, gso)
+
         // check whether the onboarding screen should be shown
         val sharedPreferences = getSharedPreferences(Constants.PREFERENCES_FILE, Context.MODE_PRIVATE)
         if (sharedPreferences.contains(Constants.PREF_USER_FIRST_TIME)) {
@@ -67,6 +79,13 @@ class MainActivity : AppCompatActivity() {
         pairingButton = findViewById(R.id.ble_button)
         recordButton = findViewById(R.id.record_button)
         demoButton = findViewById(R.id.demo_button)
+        welcomeMsg = findViewById(R.id.welcome_msg)
+
+        val account = GoogleSignIn.getLastSignedInAccount(this)
+        if (account != null) {
+            val username = account.displayName
+            welcomeMsg.text = String.format("Welcome\n%s", username)
+        }
 
         permissionAlertDialog = AlertDialog.Builder(this)
 
