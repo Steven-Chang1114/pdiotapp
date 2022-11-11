@@ -5,7 +5,6 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.content.pm.PackageManager
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.Settings
 import android.util.Log
@@ -14,11 +13,17 @@ import android.view.MenuItem
 import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
+import com.google.android.gms.auth.api.Auth
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInClient
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.gms.common.api.ResultCallback
+import com.google.android.gms.common.api.Status
+import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.ktx.Firebase
 import com.specknet.pdiotapp.bluetooth.BluetoothSpeckService
 import com.specknet.pdiotapp.bluetooth.ConnectingActivity
 import com.specknet.pdiotapp.demo.DemoApp
@@ -27,6 +32,7 @@ import com.specknet.pdiotapp.onboarding.OnBoardingActivity
 import com.specknet.pdiotapp.utils.Constants
 import com.specknet.pdiotapp.utils.Utils
 import kotlinx.android.synthetic.main.activity_main.*
+
 
 class HomePage : AppCompatActivity() {
 
@@ -53,13 +59,22 @@ class HomePage : AppCompatActivity() {
     // broadcast receiver
     val filter = IntentFilter()
 
+    lateinit var gso : GoogleSignInOptions
+    lateinit var googleSignInClient: GoogleSignInClient
+
     var isUserFirstTime = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        auth = FirebaseAuth.getInstance()
+        gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+            .requestIdToken(getString(R.string.default_web_client_id))
+            .requestEmail()
+            .build()
+
+        googleSignInClient = GoogleSignIn.getClient(this, gso)
+
         val username = intent.getStringExtra("name")
 
         // check whether the onboarding screen should be shown
@@ -119,10 +134,18 @@ class HomePage : AppCompatActivity() {
         }
 
         signoutButton.setOnClickListener {
-            Firebase.auth.signOut()
-            Log.i("User_AUTH", "Logout")
-            val intent = Intent(this, MainActivity::class.java)
-            startActivity(intent)
+            googleSignInClient.signOut()
+                .addOnCompleteListener(this, OnCompleteListener<Void?> {
+                    // ...
+                    Log.i("User_AUTH", "Logout")
+                    val intent = Intent(applicationContext, MainActivity::class.java)
+                    startActivity(intent)
+                })
+
+//            auth.signOut()
+//            Log.i("User_AUTH", "Logout")
+//            val intent = Intent(this, MainActivity::class.java)
+//            startActivity(intent)
         }
     }
 

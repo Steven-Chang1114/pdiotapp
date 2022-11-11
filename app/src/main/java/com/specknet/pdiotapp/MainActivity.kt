@@ -32,11 +32,6 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-//        val account = GoogleSignIn.getLastSignedInAccount(this);
-//        if (account != null) {
-//            navigateToMainPage(account)
-//        }
-
         setContentView(R.layout.login)
 
         loginBtn = findViewById(R.id.login_btn)
@@ -52,6 +47,11 @@ class MainActivity : AppCompatActivity() {
             .build()
 
         googleSignInClient = GoogleSignIn.getClient(this, gso)
+
+        val account = GoogleSignIn.getLastSignedInAccount(this);
+        if (account != null) {
+            navigateToMainPage(account)
+        }
 
         setupClickListeners()
     }
