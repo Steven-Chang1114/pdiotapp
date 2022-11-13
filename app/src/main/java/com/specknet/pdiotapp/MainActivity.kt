@@ -15,15 +15,21 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
+import com.specknet.pdiotapp.demo.DemoApp
 
 class MainActivity : AppCompatActivity() {
 
     // buttons and textviews
     lateinit var loginBtn: Button
+    lateinit var signupBtn: Button
     lateinit var username: TextView
     lateinit var password: TextView
 
+    private lateinit var googleAuth: FirebaseAuth
     private lateinit var auth: FirebaseAuth
     lateinit var gso : GoogleSignInOptions
     lateinit var googleSignInClient: GoogleSignInClient
@@ -38,8 +44,10 @@ class MainActivity : AppCompatActivity() {
         username = findViewById(R.id.username)
         password = findViewById(R.id.password)
         googleBtn = findViewById(R.id.google_btn)
+        signupBtn = findViewById(R.id.signup_btn)
 
-        auth = FirebaseAuth.getInstance()
+        googleAuth = FirebaseAuth.getInstance()
+        auth = Firebase.auth
 
         gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
             .requestIdToken(getString(R.string.default_web_client_id))
@@ -48,10 +56,14 @@ class MainActivity : AppCompatActivity() {
 
         googleSignInClient = GoogleSignIn.getClient(this, gso)
 
-        val account = GoogleSignIn.getLastSignedInAccount(this);
-        if (account != null) {
-            navigateToMainPage(account)
+        val firebaseAccount = auth.currentUser
+        val googleAuthAccount = GoogleSignIn.getLastSignedInAccount(this);
+        if (googleAuthAccount != null) {
+            googleNavigateToMainPage(googleAuthAccount)
         }
+//        else if (firebaseAccount != null) {
+//            firebaseNavigateToMainPage(firebaseAccount)
+//        }
 
         setupClickListeners()
     }
@@ -65,6 +77,11 @@ class MainActivity : AppCompatActivity() {
             } else {
                 Toast.makeText(this, "Login failed", Toast.LENGTH_SHORT).show()
             }
+        }
+
+        signupBtn.setOnClickListener {
+            val intent = Intent(this, SignUp::class.java)
+            startActivity(intent)
         }
 
         googleBtn.setOnClickListener {
@@ -98,9 +115,9 @@ class MainActivity : AppCompatActivity() {
 
     private fun updateUI(account: GoogleSignInAccount) {
         val credential = GoogleAuthProvider.getCredential(account.idToken , null)
-        auth.signInWithCredential(credential).addOnCompleteListener {
+        googleAuth.signInWithCredential(credential).addOnCompleteListener {
             if (it.isSuccessful){
-                navigateToMainPage(account)
+                googleNavigateToMainPage(account)
             }else{
                 Toast.makeText(this, it.exception.toString() , Toast.LENGTH_SHORT).show()
 
@@ -108,7 +125,13 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun navigateToMainPage(account: GoogleSignInAccount) {
+    private fun googleNavigateToMainPage(account: GoogleSignInAccount) {
+        val intent = Intent(this , HomePage::class.java)
+        intent.putExtra("name" , account.displayName)
+        startActivity(intent)
+    }
+
+    private fun firebaseNavigateToMainPage(account: FirebaseUser) {
         val intent = Intent(this , HomePage::class.java)
         intent.putExtra("name" , account.displayName)
         startActivity(intent)

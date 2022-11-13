@@ -136,16 +136,10 @@ class HomePage : AppCompatActivity() {
         signoutButton.setOnClickListener {
             googleSignInClient.signOut()
                 .addOnCompleteListener(this, OnCompleteListener<Void?> {
-                    // ...
                     Log.i("User_AUTH", "Logout")
                     val intent = Intent(applicationContext, MainActivity::class.java)
                     startActivity(intent)
                 })
-
-//            auth.signOut()
-//            Log.i("User_AUTH", "Logout")
-//            val intent = Intent(this, MainActivity::class.java)
-//            startActivity(intent)
         }
     }
 
