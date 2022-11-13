@@ -19,18 +19,19 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Sign in"
-            app:layout_constraintBottom_toTopOf="@+id/username"
+            app:layout_constraintBottom_toTopOf="@+id/emailField"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
         <EditText
-            android:id="@+id/username"
+            android:id="@+id/emailField"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:ems="10"
+            android:hint="email"
             android:inputType="textPersonName"
-            android:hint="username"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/password"
             app:layout_constraintStart_toStartOf="parent"
             tools:layout_editor_absoluteY="103dp" />
 
@@ -43,7 +44,7 @@
             android:inputType="textPassword"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/username" />
+            app:layout_constraintTop_toBottomOf="@+id/emailField" />
 
         <Button
             android:id="@+id/login_btn"

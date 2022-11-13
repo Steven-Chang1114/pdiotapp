@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
@@ -19,14 +20,13 @@ import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
-import com.specknet.pdiotapp.demo.DemoApp
 
 class MainActivity : AppCompatActivity() {
 
     // buttons and textviews
     lateinit var loginBtn: Button
     lateinit var signupBtn: Button
-    lateinit var username: TextView
+    lateinit var email: TextView
     lateinit var password: TextView
 
     private lateinit var googleAuth: FirebaseAuth
@@ -41,7 +41,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.login)
 
         loginBtn = findViewById(R.id.login_btn)
-        username = findViewById(R.id.username)
+        email = findViewById(R.id.emailField)
         password = findViewById(R.id.password)
         googleBtn = findViewById(R.id.google_btn)
         signupBtn = findViewById(R.id.signup_btn)
@@ -59,24 +59,34 @@ class MainActivity : AppCompatActivity() {
         val firebaseAccount = auth.currentUser
         val googleAuthAccount = GoogleSignIn.getLastSignedInAccount(this);
         if (googleAuthAccount != null) {
+            Log.d("PDIOT_FIREBASE_AUTH", "Google autodirect")
             googleNavigateToMainPage(googleAuthAccount)
+        } else if (firebaseAccount != null) {
+            Log.d("PDIOT_FIREBASE_AUTH", "firebase autodirect")
+            firebaseNavigateToMainPage(firebaseAccount)
         }
-//        else if (firebaseAccount != null) {
-//            firebaseNavigateToMainPage(firebaseAccount)
-//        }
 
         setupClickListeners()
     }
 
     fun setupClickListeners() {
         loginBtn.setOnClickListener {
-            if (username.text.toString().equals("admin") &&
-                password.text.toString().equals("admin")) {
-                val intent = Intent(this, HomePage::class.java)
-                startActivity(intent)
-            } else {
-                Toast.makeText(this, "Login failed", Toast.LENGTH_SHORT).show()
-            }
+            auth.signInWithEmailAndPassword(email.text.toString().trim(), password.text.toString().trim())
+                .addOnCompleteListener(this) { task ->
+                    if (task.isSuccessful) {
+                        // Sign in success, update UI with the signed-in user's information
+                        Log.d("PDIOT_FIREBASE_AUTH", "signInWithEmail:success")
+                        val user = auth.currentUser
+                        if (user != null) {
+                            firebaseNavigateToMainPage(user)
+                        }
+                    } else {
+                        // If sign in fails, display a message to the user.
+                        Log.w("PDIOT_FIREBASE_AUTH", "signInWithEmail:failure", task.exception)
+                        Toast.makeText(baseContext, task.exception.toString(),
+                            Toast.LENGTH_SHORT).show()
+                    }
+                }
         }
 
         signupBtn.setOnClickListener {
@@ -90,6 +100,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun signInGoogle() {
+        Log.d("PDIOT_FIREBASE_AUTH", "Google Sign in")
         val signInIntent = googleSignInClient.signInIntent
         launcher.launch(signInIntent)
     }

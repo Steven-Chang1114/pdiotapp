@@ -24,6 +24,8 @@ import com.google.android.gms.common.api.Status
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import com.specknet.pdiotapp.bluetooth.BluetoothSpeckService
 import com.specknet.pdiotapp.bluetooth.ConnectingActivity
 import com.specknet.pdiotapp.demo.DemoApp
@@ -75,8 +77,6 @@ class HomePage : AppCompatActivity() {
 
         googleSignInClient = GoogleSignIn.getClient(this, gso)
 
-        val username = intent.getStringExtra("name")
-
         // check whether the onboarding screen should be shown
         val sharedPreferences = getSharedPreferences(Constants.PREFERENCES_FILE, Context.MODE_PRIVATE)
         if (sharedPreferences.contains(Constants.PREF_USER_FIRST_TIME)) {
@@ -96,6 +96,7 @@ class HomePage : AppCompatActivity() {
         signoutButton = findViewById(R.id.signout_button)
         welcomeMsg = findViewById(R.id.welcome_msg)
 
+        val username = intent.getStringExtra("name")
         welcomeMsg.text = String.format("Welcome\n%s", username)
 
         permissionAlertDialog = AlertDialog.Builder(this)
@@ -134,12 +135,19 @@ class HomePage : AppCompatActivity() {
         }
 
         signoutButton.setOnClickListener {
+            Log.d("PDIOT_FIREBASE_AUTH", "Logout triggered")
             googleSignInClient.signOut()
                 .addOnCompleteListener(this, OnCompleteListener<Void?> {
-                    Log.i("User_AUTH", "Logout")
+                    Log.d("PDIOT_FIREBASE_AUTH", "GOOGLE Logout")
                     val intent = Intent(applicationContext, MainActivity::class.java)
                     startActivity(intent)
                 })
+            
+            Firebase.auth.signOut()
+            Log.d("PDIOT_FIREBASE_AUTH", "Firebase Logout")
+            val intent = Intent(applicationContext, MainActivity::class.java)
+            startActivity(intent)
+
         }
     }
 
