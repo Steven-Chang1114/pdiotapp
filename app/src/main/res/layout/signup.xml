@@ -29,6 +29,7 @@
             android:ems="10"
             android:hint="username"
             android:inputType="textPersonName"
+            app:layout_constraintTop_toBottomOf="@+id/sign_up_title"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             tools:layout_editor_absoluteY="103dp" />
