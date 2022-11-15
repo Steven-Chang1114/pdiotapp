@@ -17,10 +17,10 @@
             android:id="@+id/welcome_msg"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="50dp"
+            android:layout_marginTop="30dp"
             android:layout_marginRight="100dp"
             android:text="Welcome \n{user}"
-            android:textColor="#594545"
+            android:textColor="#170200"
             android:textSize="30sp"
             android:textStyle="bold"
             android:typeface="sans"
@@ -33,10 +33,10 @@
             android:id="@+id/textView2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="5dp"
             android:fontFamily="sans-serif"
             android:text="What do you want to do"
-            android:textColor="#594545"
+            android:textColor="#170200"
             android:textStyle="bold"
             android:typeface="sans"
             app:layout_constraintBottom_toTopOf="@+id/upperlayout"
@@ -48,8 +48,8 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/upperlayout"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_marginTop="30dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
             app:layout_constraintBottom_toTopOf="@+id/constraintLayout2"
             app:layout_constraintTop_toBottomOf="@+id/textView2">
 
@@ -70,44 +70,185 @@
                     android:layout_height="match_parent"
                     android:orientation="horizontal">
 
-                    <Button
+                    <androidx.constraintlayout.widget.ConstraintLayout
                         android:id="@+id/demo_button"
                         android:layout_width="120dp"
                         android:layout_height="200dp"
                         android:layout_marginLeft="30dp"
-                        android:background="@drawable/demo_button"
-                        android:text="Demo Presentation"
-                        android:textColor="#FFF5E4" />
+                        android:background="@drawable/demo_button">
+
+                        <ImageView
+                            android:id="@+id/demo_view"
+                            android:layout_width="220dp"
+                            android:layout_height="220dp"
+                            android:layout_marginTop="15dp"
+                            android:layout_marginRight="70dp"
+                            android:src="@drawable/demo"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <TextView
+                            android:id="@+id/demo_title"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginBottom="60dp"
+                            android:fontFamily="sans-serif-medium"
+                            android:lineSpacingExtra="10sp"
+                            android:shadowColor="#170200"
+                            android:shadowDx="1"
+                            android:shadowDy="1"
+                            android:shadowRadius="1"
+                            android:text="Action\nPrediction"
+                            android:textAlignment="textEnd"
+                            android:textColor="#FEF5E6"
+                            android:textSize="20sp"
+                            android:textStyle="bold"
+                            android:typeface="sans"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
 
 
-                    <Button
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
                         android:id="@+id/record_button"
                         android:layout_width="120dp"
                         android:layout_height="200dp"
                         android:layout_marginLeft="30dp"
-                        android:background="@drawable/record_button"
-                        android:text="Record data \n"
-                        android:textColor="#FFF5E4" />
+                        android:background="@drawable/demo_button">
 
-                    <Button
+                        <ImageView
+                            android:id="@+id/record_view"
+                            android:layout_width="220dp"
+                            android:layout_height="220dp"
+                            android:layout_marginTop="23dp"
+                            android:layout_marginRight="40dp"
+                            android:src="@drawable/record_data"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <TextView
+                            android:id="@+id/record_title"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="35dp"
+                            android:layout_marginBottom="60dp"
+                            android:fontFamily="sans-serif-medium"
+                            android:lineSpacingExtra="10sp"
+                            android:shadowColor="#170200"
+                            android:shadowDx="1"
+                            android:shadowDy="1"
+                            android:shadowRadius="1"
+                            android:text="Record\nData"
+                            android:textAlignment="textEnd"
+                            android:textColor="#FEF5E6"
+                            android:textSize="20sp"
+                            android:textStyle="bold"
+                            android:typeface="sans"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
                         android:id="@+id/live_button"
                         android:layout_width="120dp"
                         android:layout_height="200dp"
                         android:layout_marginLeft="30dp"
-                        android:background="@drawable/live_button"
-                        android:text="Watch Live Processing"
-                        android:textColor="#FFF5E4" />
+                        android:background="@drawable/demo_button">
 
-                    <Button
+                        <ImageView
+                            android:id="@+id/live_view"
+                            android:layout_width="220dp"
+                            android:layout_height="220dp"
+                            android:layout_marginTop="35dp"
+                            android:layout_marginRight="50dp"
+                            android:src="@drawable/live_streaming"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <TextView
+                            android:id="@+id/live_title"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="0dp"
+                            android:layout_marginBottom="60dp"
+                            android:fontFamily="sans-serif-medium"
+                            android:lineSpacingExtra="10sp"
+                            android:shadowColor="#170200"
+                            android:shadowDx="1"
+                            android:shadowDy="1"
+                            android:shadowRadius="1"
+                            android:text="Live\nProcessing"
+                            android:textAlignment="textEnd"
+                            android:textColor="#FEF5E6"
+                            android:textSize="20sp"
+                            android:textStyle="bold"
+                            android:typeface="sans"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
                         android:id="@+id/ble_button"
                         android:layout_width="120dp"
                         android:layout_height="200dp"
                         android:layout_marginLeft="30dp"
                         android:layout_marginRight="30dp"
-                        android:background="@drawable/sensor_button"
-                        android:text="Connect Sensor"
-                        android:textColor="#FFF5E4" />
+                        android:background="@drawable/demo_button">
 
+                        <ImageView
+                            android:id="@+id/ble_view"
+                            android:layout_width="220dp"
+                            android:layout_height="220dp"
+                            android:layout_marginTop="50dp"
+                            android:layout_marginRight="50dp"
+                            android:src="@drawable/pairing"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <TextView
+                            android:id="@+id/ble_title"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="25dp"
+                            android:layout_marginBottom="60dp"
+                            android:fontFamily="sans-serif-medium"
+                            android:lineSpacingExtra="10sp"
+                            android:shadowColor="#170200"
+                            android:shadowDx="1"
+                            android:shadowDy="1"
+                            android:shadowRadius="1"
+                            android:text="Connect\nSensor"
+                            android:textAlignment="textEnd"
+                            android:textColor="#FEF5E6"
+                            android:textSize="20sp"
+                            android:textStyle="bold"
+                            android:typeface="sans"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
 
                 </LinearLayout>
             </HorizontalScrollView>
@@ -119,22 +260,34 @@
             android:id="@+id/constraintLayout2"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:background="@drawable/lower_background"
+
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/upperlayout">
 
+            <ImageView
+                android:id="@+id/imageView2"
+                android:layout_width="1200dp"
+                android:layout_height="1000dp"
+                android:layout_marginBottom="340dp"
+                android:rotation="-7.5"
+                android:src="@drawable/background"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
             <TextView
-                android:id="@+id/textView3"
+                android:id="@+id/lower_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:layout_marginRight="150dp"
-                android:layout_marginBottom="10dp"
+                android:layout_marginRight="165dp"
+                android:layout_marginTop="50dp"
                 android:text="Personal Tasks"
-                android:textColor="#594545"
-                android:textSize="20sp"
+                android:fontFamily="sans-serif-medium"
+                android:textColor="#FEF5E6"
+                android:textSize="25sp"
                 android:textStyle="bold"
                 android:typeface="sans"
                 app:layout_constraintBottom_toTopOf="@+id/history_button"
@@ -142,26 +295,62 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/constraintLayout2" />
 
-            <Button
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/history_button"
-                android:layout_width="300dp"
-                android:layout_height="50dp"
+                android:layout_width="500dp"
+                android:layout_height="120dp"
+                android:layout_marginRight="200dp"
+                android:layout_marginTop="0dp"
                 android:background="@drawable/history_button"
-                android:text="Historical Data"
-                android:textColor="#594545"
-                app:layout_constraintBottom_toTopOf="@+id/signout_button"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView3" />
+                app:layout_constraintTop_toTopOf="@+id/constraintLayout2">
+
+                <ImageView
+                    android:id="@+id/history_view"
+                    android:layout_width="151dp"
+                    android:layout_height="149dp"
+                    android:layout_marginRight="50dp"
+                    android:src="@drawable/historical_data"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/history_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="250dp"
+                    android:layout_marginBottom="20dp"
+                    android:fontFamily="sans-serif-medium"
+                    android:lineSpacingExtra="0sp"
+                    android:text="Historical Data"
+                    android:shadowColor="#170200"
+                    android:shadowDx="1"
+                    android:shadowDy="1"
+                    android:shadowRadius="1"
+                    android:textAlignment="textEnd"
+                    android:textColor="#F18579"
+                    android:textSize="25sp"
+                    android:textStyle="bold"
+                    android:typeface="sans"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
             <Button
                 android:id="@+id/signout_button"
-                android:layout_width="300dp"
+                android:layout_width="320dp"
                 android:layout_height="50dp"
                 android:layout_marginBottom="30dp"
                 android:background="@drawable/signout_button"
                 android:text="Sign out"
-                android:textColor="#594545"
+                android:textColor="#112758"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"

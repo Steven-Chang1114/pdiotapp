@@ -7,9 +7,11 @@ import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.provider.Settings
+import android.text.Layout
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
@@ -39,10 +41,10 @@ import kotlinx.android.synthetic.main.activity_main.*
 class HomePage : AppCompatActivity() {
 
     // buttons and textviews
-    lateinit var liveProcessingButton: Button
-    lateinit var pairingButton: Button
-    lateinit var recordButton: Button
-    lateinit var demoButton: Button
+    lateinit var liveProcessingButton: View
+    lateinit var pairingButton: View
+    lateinit var recordButton: View
+    lateinit var demoButton: View
     lateinit var signoutButton: Button
 
     lateinit var welcomeMsg: TextView
