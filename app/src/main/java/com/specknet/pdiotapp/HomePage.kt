@@ -99,7 +99,7 @@ class HomePage : AppCompatActivity() {
         welcomeMsg = findViewById(R.id.welcome_msg)
 
         val username = intent.getStringExtra("name")
-        welcomeMsg.text = String.format("Welcome\n%s", username)
+        welcomeMsg.text = String.format("Welcome,\n%s", username)
 
         permissionAlertDialog = AlertDialog.Builder(this)
 

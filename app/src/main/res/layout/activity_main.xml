@@ -19,7 +19,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="30dp"
             android:layout_marginRight="100dp"
-            android:text="Welcome \n{user}"
+            android:text="Welcome,\n{user}"
             android:textColor="#170200"
             android:textSize="30sp"
             android:textStyle="bold"
@@ -34,6 +34,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
+            android:layout_marginRight="30dp"
             android:fontFamily="sans-serif"
             android:text="What do you want to do"
             android:textColor="#170200"
@@ -50,6 +51,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp"
             app:layout_constraintBottom_toTopOf="@+id/constraintLayout2"
             app:layout_constraintTop_toBottomOf="@+id/textView2">
 
@@ -76,6 +78,32 @@
                         android:layout_height="200dp"
                         android:layout_marginLeft="30dp"
                         android:background="@drawable/demo_button">
+
+                        <ImageView
+                            android:id="@+id/imageView3"
+                            android:layout_width="200dp"
+                            android:layout_height="200dp"
+                            android:layout_marginLeft="125dp"
+                            android:layout_marginBottom="170dp"
+                            android:src="@drawable/dotts"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            />
+
+                        <ImageView
+                            android:id="@+id/imageView4"
+                            android:layout_width="200dp"
+                            android:layout_height="200dp"
+                            android:layout_marginRight="200dp"
+                            android:layout_marginTop="228dp"
+                            android:src="@drawable/dotts"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            />
 
                         <ImageView
                             android:id="@+id/demo_view"
@@ -123,6 +151,32 @@
                         android:background="@drawable/demo_button">
 
                         <ImageView
+                            android:id="@+id/imageView6"
+                            android:layout_width="200dp"
+                            android:layout_height="200dp"
+                            android:layout_marginLeft="125dp"
+                            android:layout_marginBottom="170dp"
+                            android:src="@drawable/dotts"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            />
+
+                        <ImageView
+                            android:id="@+id/imageView5"
+                            android:layout_width="200dp"
+                            android:layout_height="200dp"
+                            android:layout_marginRight="200dp"
+                            android:layout_marginTop="228dp"
+                            android:src="@drawable/dotts"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            />
+
+                        <ImageView
                             android:id="@+id/record_view"
                             android:layout_width="220dp"
                             android:layout_height="220dp"
@@ -166,6 +220,32 @@
                         android:layout_height="200dp"
                         android:layout_marginLeft="30dp"
                         android:background="@drawable/demo_button">
+
+                        <ImageView
+                            android:id="@+id/imageView7"
+                            android:layout_width="200dp"
+                            android:layout_height="200dp"
+                            android:layout_marginLeft="125dp"
+                            android:layout_marginBottom="170dp"
+                            android:src="@drawable/dotts"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            />
+
+                        <ImageView
+                            android:id="@+id/imageView8"
+                            android:layout_width="200dp"
+                            android:layout_height="200dp"
+                            android:layout_marginRight="200dp"
+                            android:layout_marginTop="228dp"
+                            android:src="@drawable/dotts"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            />
 
                         <ImageView
                             android:id="@+id/live_view"
@@ -214,6 +294,32 @@
                         android:background="@drawable/demo_button">
 
                         <ImageView
+                            android:id="@+id/imageView9"
+                            android:layout_width="200dp"
+                            android:layout_height="200dp"
+                            android:layout_marginLeft="125dp"
+                            android:layout_marginBottom="170dp"
+                            android:src="@drawable/dotts"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            />
+
+                        <ImageView
+                            android:id="@+id/imageView10"
+                            android:layout_width="200dp"
+                            android:layout_height="200dp"
+                            android:layout_marginRight="200dp"
+                            android:layout_marginTop="228dp"
+                            android:src="@drawable/dotts"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            />
+
+                        <ImageView
                             android:id="@+id/ble_view"
                             android:layout_width="220dp"
                             android:layout_height="220dp"
@@ -229,7 +335,7 @@
                             android:id="@+id/ble_title"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="25dp"
+                            android:layout_marginLeft="20dp"
                             android:layout_marginBottom="60dp"
                             android:fontFamily="sans-serif-medium"
                             android:lineSpacingExtra="10sp"
@@ -266,28 +372,31 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/upperlayout">
 
+
             <ImageView
                 android:id="@+id/imageView2"
                 android:layout_width="1200dp"
                 android:layout_height="1000dp"
-                android:layout_marginBottom="340dp"
-                android:rotation="-7.5"
+                android:layout_marginBottom="270dp"
+                android:rotation="-8"
                 android:src="@drawable/background"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.503"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.51" />
 
             <TextView
                 android:id="@+id/lower_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="165dp"
-                android:layout_marginTop="50dp"
+                android:layout_marginTop="15dp"
                 android:text="Personal Tasks"
                 android:fontFamily="sans-serif-medium"
                 android:textColor="#FEF5E6"
-                android:textSize="25sp"
+                android:textSize="20sp"
                 android:textStyle="bold"
                 android:typeface="sans"
                 app:layout_constraintBottom_toTopOf="@+id/history_button"
@@ -297,10 +406,10 @@
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/history_button"
-                android:layout_width="500dp"
-                android:layout_height="120dp"
-                android:layout_marginRight="200dp"
-                android:layout_marginTop="0dp"
+                android:layout_width="300dp"
+                android:layout_height="85dp"
+                android:layout_marginRight="5dp"
+                android:layout_marginBottom="10dp"
                 android:background="@drawable/history_button"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -308,10 +417,36 @@
                 app:layout_constraintTop_toTopOf="@+id/constraintLayout2">
 
                 <ImageView
+                    android:id="@+id/imageView11"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/blue_dotts"
+                    android:layout_marginTop="38dp"
+                    android:layout_marginLeft="300dp"
+                    tools:layout_editor_absoluteX="129dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"/>
+
+                <ImageView
+                    android:id="@+id/imageView12"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/blue_dotts"
+                    android:layout_marginBottom="80dp"
+                    android:layout_marginRight="212dp"
+                    tools:layout_editor_absoluteX="129dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"/>
+
+                <ImageView
                     android:id="@+id/history_view"
-                    android:layout_width="151dp"
-                    android:layout_height="149dp"
-                    android:layout_marginRight="50dp"
+                    android:layout_width="120dp"
+                    android:layout_height="120dp"
+                    android:layout_marginRight="220dp"
                     android:src="@drawable/historical_data"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -322,7 +457,7 @@
                     android:id="@+id/history_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="250dp"
+                    android:layout_marginLeft="50dp"
                     android:layout_marginBottom="20dp"
                     android:fontFamily="sans-serif-medium"
                     android:lineSpacingExtra="0sp"
@@ -333,7 +468,7 @@
                     android:shadowRadius="1"
                     android:textAlignment="textEnd"
                     android:textColor="#F18579"
-                    android:textSize="25sp"
+                    android:textSize="20sp"
                     android:textStyle="bold"
                     android:typeface="sans"
                     app:layout_constraintBottom_toBottomOf="parent"
@@ -345,12 +480,15 @@
 
             <Button
                 android:id="@+id/signout_button"
-                android:layout_width="320dp"
-                android:layout_height="50dp"
-                android:layout_marginBottom="30dp"
+                android:layout_width="300dp"
+                android:layout_height="40dp"
+                android:layout_marginBottom="10dp"
                 android:background="@drawable/signout_button"
                 android:text="Sign out"
                 android:textColor="#112758"
+                android:textStyle="bold"
+                android:typeface="sans"
+                android:fontFamily="sans-serif-medium"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
