@@ -38,14 +38,6 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        setContentView(R.layout.login)
-
-        loginBtn = findViewById(R.id.login_btn)
-        email = findViewById(R.id.emailField)
-        password = findViewById(R.id.password)
-        googleBtn = findViewById(R.id.google_btn)
-        signupBtn = findViewById(R.id.signup_btn)
-
         googleAuth = FirebaseAuth.getInstance()
         auth = Firebase.auth
 
@@ -65,6 +57,14 @@ class MainActivity : AppCompatActivity() {
             Log.d("PDIOT_FIREBASE_AUTH", "firebase autodirect")
             firebaseNavigateToMainPage(firebaseAccount)
         }
+
+        setContentView(R.layout.login)
+
+        loginBtn = findViewById(R.id.login_btn)
+        email = findViewById(R.id.emailField)
+        password = findViewById(R.id.password)
+        googleBtn = findViewById(R.id.google_btn)
+        signupBtn = findViewById(R.id.signup_btn)
 
         setupClickListeners()
     }
