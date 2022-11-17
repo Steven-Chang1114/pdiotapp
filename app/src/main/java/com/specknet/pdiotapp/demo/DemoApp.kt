@@ -12,6 +12,7 @@ import android.os.HandlerThread
 import android.os.Looper
 import android.util.Log
 import android.widget.Button
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.github.mikephil.charting.data.LineData
@@ -39,10 +40,14 @@ class DemoApp : AppCompatActivity() {
 
     lateinit var respackActiveBtn: Button
     lateinit var thingyActiveBtn: Button
+    lateinit var cloudActiveBtn: Button
+    lateinit var localActiveBtn: Button
+    lateinit var actionImage: ImageView
     lateinit var title: TextView
 
     var isRespackActive = false
     var isThingyActive = false
+    var isCloudActive = true
 
     lateinit var classifiedMovement: ActionEnum
     private lateinit var classifiedMovementField : TextView
@@ -133,6 +138,33 @@ class DemoApp : AppCompatActivity() {
             }
 
         }
+
+        cloudActiveBtn.setOnClickListener {
+            if (!isCloudActive)  {
+                isCloudActive = true
+
+                actionImage.setBackgroundResource(R.drawable.lying_down_on_back)
+                actionImage.adjustViewBounds = true
+
+                classifiedMovementField.text = ActionEnum.LYING_DOWN_ON_THE_BACK.movement
+                cloudActiveBtn.setBackgroundResource(R.drawable.hardware_button_active)
+                localActiveBtn.setBackgroundResource(R.drawable.hardware_button_inactive)
+            }
+        }
+
+        localActiveBtn.setOnClickListener {
+            if (isCloudActive) {
+                isCloudActive = false
+
+                actionImage.setBackgroundResource(R.drawable.standing)
+                actionImage.adjustViewBounds = true
+
+                classifiedMovementField.text = ActionEnum.STANDING.movement
+
+                cloudActiveBtn.setBackgroundResource(R.drawable.hardware_button_inactive)
+                localActiveBtn.setBackgroundResource(R.drawable.hardware_button_active)
+            }
+        }
     }
 
     private fun classifyMovement(floatArrayBuffer: FloatBuffer) {
@@ -184,13 +216,17 @@ class DemoApp : AppCompatActivity() {
 
         respackActiveBtn = findViewById(R.id.respack_button)
         thingyActiveBtn = findViewById(R.id.thingy_button)
+        cloudActiveBtn = findViewById(R.id.azure_button)
+        localActiveBtn = findViewById(R.id.local_button)
         classifiedMovementField = findViewById(R.id.movement)
+        actionImage = findViewById(R.id.movement_img)
         title = findViewById(R.id.user)
 
         val username = intent.getStringExtra("name")
         title.text = String.format("%s's\ncurrent action:", username)
 
-        classifiedMovementField.text = ActionEnum.GENERAL_MOVEMENT.movement
+        classifiedMovementField.text = ActionEnum.LYING_DOWN_ON_THE_RIGHT_SIDE.movement
+        actionImage.setBackgroundResource(R.drawable.general_movement)
     }
 
     private fun updatePage(action: ActionEnum) {

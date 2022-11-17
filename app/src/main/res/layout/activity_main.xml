@@ -377,7 +377,7 @@
                 android:id="@+id/imageView2"
                 android:layout_width="650dp"
                 android:layout_height="400dp"
-                android:layout_marginTop="125dp"
+                android:layout_marginTop="100dp"
                 android:rotation="-3.5"
                 android:src="@drawable/background"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -389,7 +389,7 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/action_container"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="0dp"
                 android:layout_marginTop="35dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -400,17 +400,17 @@
                     android:id="@+id/lower_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginEnd="165dp"
                     android:fontFamily="sans-serif-medium"
                     android:text="@string/personal_tasks"
                     android:textColor="#FEF5E6"
                     android:textSize="20sp"
                     android:textStyle="bold"
                     android:typeface="sans"
-                    android:layout_marginEnd="165dp"
                     app:layout_constraintBottom_toTopOf="@+id/history_button"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/action_container"/>
+                    app:layout_constraintTop_toTopOf="@+id/action_container" />
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/history_button"
