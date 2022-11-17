@@ -5,6 +5,7 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
@@ -28,12 +29,12 @@ class MainActivity : AppCompatActivity() {
     lateinit var signupBtn: Button
     lateinit var email: TextView
     lateinit var password: TextView
+    lateinit var googleBtn: View
 
     private lateinit var googleAuth: FirebaseAuth
     private lateinit var auth: FirebaseAuth
     lateinit var gso : GoogleSignInOptions
     lateinit var googleSignInClient: GoogleSignInClient
-    lateinit var googleBtn: ImageView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
