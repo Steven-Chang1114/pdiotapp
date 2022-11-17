@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FFF8EA">
+    android:background="#FEF5E6">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/upper_container"
@@ -23,7 +23,7 @@
             android:layout_marginTop="0dp"
             android:layout_marginRight="100dp"
             android:text="{User}'s \n current action"
-            android:textColor="#FFF5E4"
+            android:textColor="#FEF5E6"
             android:textSize="30sp"
             android:textStyle="bold"
             android:typeface="sans"
@@ -37,7 +37,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Loading"
-            android:textColor="#FFF5E4"
+            android:textColor="#FEF5E6"
             android:textSize="20sp"
             android:textStyle="bold"
             android:typeface="sans"
@@ -56,6 +56,42 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/upper_container">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/hardware_buttons"
+            android:layout_width="match_parent"
+            android:layout_height="0dp">
+
+            <Button
+                android:id="@+id/respack_button"
+                android:layout_width="100dp"
+                android:layout_height="40dp"
+                android:background="@drawable/hardware_button_inactive"
+                android:fontFamily="sans-serif-medium"
+                android:text="Respack"
+                android:textColor="#FEF5E6"
+                android:textStyle="bold"
+                android:typeface="sans"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/thingy_button"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <Button
+                android:id="@+id/thingy_button"
+                android:layout_width="100dp"
+                android:layout_height="40dp"
+                android:background="@drawable/hardware_button_inactive"
+                android:fontFamily="sans-serif-medium"
+                android:text="Thingy"
+                android:textColor="#FEF5E6"
+                android:textStyle="bold"
+                android:typeface="sans"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/respack_button"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

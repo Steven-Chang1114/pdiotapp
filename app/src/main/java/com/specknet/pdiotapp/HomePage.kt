@@ -31,6 +31,7 @@ import com.google.firebase.ktx.Firebase
 import com.specknet.pdiotapp.bluetooth.BluetoothSpeckService
 import com.specknet.pdiotapp.bluetooth.ConnectingActivity
 import com.specknet.pdiotapp.demo.DemoApp
+import com.specknet.pdiotapp.demo.HistoricalData
 import com.specknet.pdiotapp.live.LiveDataActivity
 import com.specknet.pdiotapp.onboarding.OnBoardingActivity
 import com.specknet.pdiotapp.utils.Constants
@@ -45,7 +46,10 @@ class HomePage : AppCompatActivity() {
     lateinit var pairingButton: View
     lateinit var recordButton: View
     lateinit var demoButton: View
+    lateinit var historyButton: View
     lateinit var signoutButton: Button
+
+    lateinit var username: String
 
     lateinit var welcomeMsg: TextView
     private lateinit var auth: FirebaseAuth
@@ -96,9 +100,11 @@ class HomePage : AppCompatActivity() {
         recordButton = findViewById(R.id.record_button)
         demoButton = findViewById(R.id.demo_button)
         signoutButton = findViewById(R.id.signout_button)
+        historyButton = findViewById(R.id.history_button)
+
         welcomeMsg = findViewById(R.id.welcome_msg)
 
-        val username = intent.getStringExtra("name")
+        username = intent.getStringExtra("name").toString()
         welcomeMsg.text = String.format("Welcome,\n%s", username)
 
         permissionAlertDialog = AlertDialog.Builder(this)
@@ -133,6 +139,12 @@ class HomePage : AppCompatActivity() {
 
         demoButton.setOnClickListener {
             val intent = Intent(this, DemoApp::class.java)
+            intent.putExtra("name" , username)
+            startActivity(intent)
+        }
+
+        historyButton.setOnClickListener {
+            val intent = Intent(this, HistoricalData::class.java)
             startActivity(intent)
         }
 

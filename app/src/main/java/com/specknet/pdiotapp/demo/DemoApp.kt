@@ -4,11 +4,14 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.graphics.Color
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.os.Handler
 import android.os.HandlerThread
 import android.os.Looper
 import android.util.Log
+import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.github.mikephil.charting.data.LineData
@@ -34,6 +37,13 @@ class DemoApp : AppCompatActivity() {
     lateinit var lastMovement: ActionEnum
     lateinit var tflite : Interpreter
 
+    lateinit var respackActiveBtn: Button
+    lateinit var thingyActiveBtn: Button
+    lateinit var title: TextView
+
+    var isRespackActive = false
+    var isThingyActive = false
+
     lateinit var classifiedMovement: ActionEnum
     private lateinit var classifiedMovementField : TextView
 
@@ -49,9 +59,12 @@ class DemoApp : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_demo)
+
         floatArrayBuffer = FloatBuffer.allocate(500)
 
         setupPage()
+
+        setupClickListeners()
 
         // set up the broadcast receiver
         respeckLiveUpdateReceiver = object : BroadcastReceiver() {
@@ -98,6 +111,30 @@ class DemoApp : AppCompatActivity() {
 
     }
 
+    private fun setupClickListeners() {
+        respackActiveBtn.setOnClickListener {
+            if (isRespackActive) {
+                isRespackActive = false
+                respackActiveBtn.setBackgroundResource(R.drawable.hardware_button_inactive)
+            } else {
+                isRespackActive = true
+                respackActiveBtn.setBackgroundResource(R.drawable.hardware_button_active)
+            }
+        }
+
+        thingyActiveBtn.setOnClickListener {
+
+            if (isThingyActive) {
+                isThingyActive = false
+                thingyActiveBtn.setBackgroundResource(R.drawable.hardware_button_inactive)
+            } else {
+                isThingyActive = true
+                thingyActiveBtn.setBackgroundResource(R.drawable.hardware_button_active)
+            }
+
+        }
+    }
+
     private fun classifyMovement(floatArrayBuffer: FloatBuffer) {
 //        if (counter < 50) {
 //            return updatePage(lastMovement)
@@ -133,7 +170,7 @@ class DemoApp : AppCompatActivity() {
             7 -> ActionEnum.LYING_DOWN_ON_THE_LEFT_SIDE
             8 -> ActionEnum.LYING_DOWN_ON_THE_BACK
             9 -> ActionEnum.LYING_DOWN_ON_STOMACH
-            10 -> ActionEnum.MOVEMENT
+            10 -> ActionEnum.GENERAL_MOVEMENT
             11 -> ActionEnum.RUNNING
             12 -> ActionEnum.ASCENDING_STAIRS
             13 -> ActionEnum.DESCENDING_STAIRS
@@ -142,10 +179,18 @@ class DemoApp : AppCompatActivity() {
     }
 
     private fun setupPage() {
-        lastMovement = ActionEnum.LOADING
+        lastMovement = ActionEnum.GENERAL_MOVEMENT
         model = Model.newInstance(this)
+
+        respackActiveBtn = findViewById(R.id.respack_button)
+        thingyActiveBtn = findViewById(R.id.thingy_button)
         classifiedMovementField = findViewById(R.id.movement)
-        classifiedMovementField.text = ActionEnum.LYING_DOWN_ON_THE_BACK.movement
+        title = findViewById(R.id.user)
+
+        val username = intent.getStringExtra("name")
+        title.text = String.format("%s's\ncurrent action:", username)
+
+        classifiedMovementField.text = ActionEnum.GENERAL_MOVEMENT.movement
     }
 
     private fun updatePage(action: ActionEnum) {
