@@ -144,7 +144,6 @@ class DemoApp : AppCompatActivity() {
                 isCloudActive = true
 
                 actionImage.setBackgroundResource(R.drawable.lying_down_on_back)
-                actionImage.adjustViewBounds = true
 
                 classifiedMovementField.text = ActionEnum.LYING_DOWN_ON_THE_BACK.movement
                 cloudActiveBtn.setBackgroundResource(R.drawable.hardware_button_active)
@@ -157,7 +156,6 @@ class DemoApp : AppCompatActivity() {
                 isCloudActive = false
 
                 actionImage.setBackgroundResource(R.drawable.standing)
-                actionImage.adjustViewBounds = true
 
                 classifiedMovementField.text = ActionEnum.STANDING.movement
 
