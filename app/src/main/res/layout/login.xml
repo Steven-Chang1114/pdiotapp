@@ -6,6 +6,18 @@
     android:layout_height="match_parent"
     android:background="#FEF5E6">
 
+    <ImageView
+        android:id="@+id/imageView14"
+        android:layout_width="600dp"
+        android:layout_height="600dp"
+        android:layout_marginTop="350dp"
+        android:layout_marginLeft="250dp"
+        app:srcCompat="@drawable/logo_background"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/main"
         android:layout_width="0dp"
@@ -71,6 +83,8 @@
                 android:paddingLeft="10dp"
                 android:paddingVertical="5dp"
                 android:hint="Password"
+                android:drawableLeft="@drawable/ic_baseline_info_24"
+                android:drawablePadding="10dp"
                 android:background="@drawable/input"
                 android:inputType="textPassword"
                 app:layout_constraintBottom_toTopOf="@+id/login_btn"
