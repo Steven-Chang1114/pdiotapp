@@ -10,7 +10,9 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.NFC" />
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
 
     <uses-feature
         android:name="android.hardware.bluetooth_le"
@@ -31,6 +33,7 @@
 
         <activity
             android:name=".live.LiveDataActivity"
+            android:exported="true"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="com.specknet.respeck.RESPECK_LIVE_BROADCAST" />
@@ -49,9 +52,11 @@
             </intent-filter>
         </activity>
         <activity
+            android:exported="true"
             android:name=".barcode.BarcodeActivity"
             android:screenOrientation="portrait" />
         <activity
+            android:exported="true"
             android:name=".bluetooth.ConnectingActivity"
             android:screenOrientation="portrait">
             <intent-filter>
@@ -62,7 +67,71 @@
             </intent-filter>
         </activity>
         <activity
+            android:exported="true"
             android:name=".demo.DemoApp"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="com.specknet.respeck.RESPECK_LIVE_BROADCAST" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="com.specknet.respeck.ACTION_RESPECK_LIVE_BROADCAST" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="com.specknet.respeck.ACTION_RESPECK_REHAB_BROADCAST" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="com.specknet.respeck.RESPECK_REHAB_BROADCAST" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="com.specknet.pdiotapp.RESPECK_BROADCAST" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:exported="true"
+            android:name=".demo.HistoricalData"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="com.specknet.respeck.RESPECK_LIVE_BROADCAST" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="com.specknet.respeck.ACTION_RESPECK_LIVE_BROADCAST" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="com.specknet.respeck.ACTION_RESPECK_REHAB_BROADCAST" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="com.specknet.respeck.RESPECK_REHAB_BROADCAST" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="com.specknet.pdiotapp.RESPECK_BROADCAST" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:exported="true"
+            android:name=".HomePage"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="com.specknet.respeck.RESPECK_LIVE_BROADCAST" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="com.specknet.respeck.ACTION_RESPECK_LIVE_BROADCAST" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="com.specknet.respeck.ACTION_RESPECK_REHAB_BROADCAST" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="com.specknet.respeck.RESPECK_REHAB_BROADCAST" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="com.specknet.pdiotapp.RESPECK_BROADCAST" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:exported="true"
+            android:name=".SignUp"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="com.specknet.respeck.RESPECK_LIVE_BROADCAST" />

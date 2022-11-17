@@ -4,11 +4,15 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.graphics.Color
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.os.Handler
 import android.os.HandlerThread
 import android.os.Looper
 import android.util.Log
+import android.widget.Button
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.github.mikephil.charting.data.LineData
@@ -34,6 +38,17 @@ class DemoApp : AppCompatActivity() {
     lateinit var lastMovement: ActionEnum
     lateinit var tflite : Interpreter
 
+    lateinit var respackActiveBtn: Button
+    lateinit var thingyActiveBtn: Button
+    lateinit var cloudActiveBtn: Button
+    lateinit var localActiveBtn: Button
+    lateinit var actionImage: ImageView
+    lateinit var title: TextView
+
+    var isRespackActive = false
+    var isThingyActive = false
+    var isCloudActive = true
+
     lateinit var classifiedMovement: ActionEnum
     private lateinit var classifiedMovementField : TextView
 
@@ -49,9 +64,12 @@ class DemoApp : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_demo)
+
         floatArrayBuffer = FloatBuffer.allocate(500)
 
         setupPage()
+
+        setupClickListeners()
 
         // set up the broadcast receiver
         respeckLiveUpdateReceiver = object : BroadcastReceiver() {
@@ -98,27 +116,76 @@ class DemoApp : AppCompatActivity() {
 
     }
 
-    private fun classifyMovement(floatArrayBuffer: FloatBuffer) {
-        if (counter < 50) {
-            return updatePage(lastMovement)
+    private fun setupClickListeners() {
+        respackActiveBtn.setOnClickListener {
+            if (isRespackActive) {
+                isRespackActive = false
+                respackActiveBtn.setBackgroundResource(R.drawable.hardware_button_inactive)
+            } else {
+                isRespackActive = true
+                respackActiveBtn.setBackgroundResource(R.drawable.hardware_button_active)
+            }
         }
 
-        val inputArray = floatArrayBuffer.array().sliceArray(IntRange(0, 299))
-        val inputFeature0 = TensorBuffer.createFixedSize(intArrayOf(1, 50, 6), DataType.FLOAT32)
-        inputFeature0.loadArray(inputArray)
+        thingyActiveBtn.setOnClickListener {
 
-        counter = 0
-        floatArrayBuffer.clear()
+            if (isThingyActive) {
+                isThingyActive = false
+                thingyActiveBtn.setBackgroundResource(R.drawable.hardware_button_inactive)
+            } else {
+                isThingyActive = true
+                thingyActiveBtn.setBackgroundResource(R.drawable.hardware_button_active)
+            }
 
-        val output = model.process(inputFeature0).outputFeature0AsTensorBuffer.floatArray
+        }
 
-        val movementIdx = output.indexOf(output.max()!!)
+        cloudActiveBtn.setOnClickListener {
+            if (!isCloudActive)  {
+                isCloudActive = true
 
-        Log.i("OUTPUT", "Predicted movement is ${movementIdx}")
-        val currentMovement = selectMovements(movementIdx)
+                actionImage.setBackgroundResource(R.drawable.lying_down_on_back)
 
-        lastMovement = currentMovement
-        updatePage(currentMovement)
+                classifiedMovementField.text = ActionEnum.LYING_DOWN_ON_THE_BACK.movement
+                cloudActiveBtn.setBackgroundResource(R.drawable.hardware_button_active)
+                localActiveBtn.setBackgroundResource(R.drawable.hardware_button_inactive)
+            }
+        }
+
+        localActiveBtn.setOnClickListener {
+            if (isCloudActive) {
+                isCloudActive = false
+
+                actionImage.setBackgroundResource(R.drawable.standing)
+
+                classifiedMovementField.text = ActionEnum.STANDING.movement
+
+                cloudActiveBtn.setBackgroundResource(R.drawable.hardware_button_inactive)
+                localActiveBtn.setBackgroundResource(R.drawable.hardware_button_active)
+            }
+        }
+    }
+
+    private fun classifyMovement(floatArrayBuffer: FloatBuffer) {
+//        if (counter < 50) {
+//            return updatePage(lastMovement)
+//        }
+//
+//        val inputArray = floatArrayBuffer.array().sliceArray(IntRange(0, 299))
+//        val inputFeature0 = TensorBuffer.createFixedSize(intArrayOf(1, 50, 6), DataType.FLOAT32)
+//        inputFeature0.loadArray(inputArray)
+//
+//        counter = 0
+//        floatArrayBuffer.clear()
+//
+//        val output = model.process(inputFeature0).outputFeature0AsTensorBuffer.floatArray
+//
+//        val movementIdx = output.indexOf(output.max()!!)
+//
+//        Log.i("OUTPUT", "Predicted movement is ${movementIdx}")
+//        val currentMovement = selectMovements(movementIdx)
+//
+//        lastMovement = currentMovement
+//        updatePage(currentMovement)
     }
 
     private fun selectMovements(idx: Int) : ActionEnum {
@@ -133,7 +200,7 @@ class DemoApp : AppCompatActivity() {
             7 -> ActionEnum.LYING_DOWN_ON_THE_LEFT_SIDE
             8 -> ActionEnum.LYING_DOWN_ON_THE_BACK
             9 -> ActionEnum.LYING_DOWN_ON_STOMACH
-            10 -> ActionEnum.MOVEMENT
+            10 -> ActionEnum.GENERAL_MOVEMENT
             11 -> ActionEnum.RUNNING
             12 -> ActionEnum.ASCENDING_STAIRS
             13 -> ActionEnum.DESCENDING_STAIRS
@@ -142,10 +209,22 @@ class DemoApp : AppCompatActivity() {
     }
 
     private fun setupPage() {
-        lastMovement = ActionEnum.LOADING
+        lastMovement = ActionEnum.GENERAL_MOVEMENT
         model = Model.newInstance(this)
+
+        respackActiveBtn = findViewById(R.id.respack_button)
+        thingyActiveBtn = findViewById(R.id.thingy_button)
+        cloudActiveBtn = findViewById(R.id.azure_button)
+        localActiveBtn = findViewById(R.id.local_button)
         classifiedMovementField = findViewById(R.id.movement)
-        classifiedMovementField.text = ActionEnum.LYING_DOWN_ON_THE_BACK.movement
+        actionImage = findViewById(R.id.movement_img)
+        title = findViewById(R.id.user)
+
+        val username = intent.getStringExtra("name")
+        title.text = String.format("%s's\ncurrent action:", username)
+
+        classifiedMovementField.text = ActionEnum.LYING_DOWN_ON_THE_RIGHT_SIDE.movement
+        actionImage.setBackgroundResource(R.drawable.general_movement)
     }
 
     private fun updatePage(action: ActionEnum) {

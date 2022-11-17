@@ -1,14 +1,180 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="#FEF5E6">
 
-    <TextView
-        android:id="@+id/movement"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Hello"
-        tools:layout_editor_absoluteX="189dp"
-        tools:layout_editor_absoluteY="160dp" />
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/upper_container"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:background="@drawable/demo_upper_container"
+        app:layout_constraintBottom_toTopOf="@+id/lower_container"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/user"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="0dp"
+            android:layout_marginStart="30dp"
+            android:text="{User}'s \n current action"
+            android:textColor="#FEF5E6"
+            android:textSize="30sp"
+            android:textStyle="bold"
+            android:typeface="sans"
+            app:layout_constraintBottom_toTopOf="@+id/movement"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/movement"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Lying down on the right side"
+            android:layout_marginStart="30dp"
+            android:textColor="#FEF5E6"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:typeface="sans"
+            android:layout_marginBottom="130dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/user"
+            app:layout_constraintTop_toBottomOf="@+id/user" />
+
+        <ImageView
+            android:id="@+id/movement_img"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:layout_centerInParent="true"
+            android:adjustViewBounds="true"
+            android:scaleType="fitXY"
+            android:layout_marginStart="30dp"
+            android:layout_marginEnd="30dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/movement"
+            />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/lower_container"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/upper_container">
+
+        <TextView
+            android:id="@+id/instruction"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Choose the following classification options for actions, models and hardwares"
+            android:paddingEnd="20dp"
+            android:paddingStart="30dp"
+            android:layout_marginTop="10dp"
+            android:textColor="#112758"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:typeface="sans"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/lower_container"
+            app:layout_constraintBottom_toTopOf="@+id/cloud_buttons"
+            />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cloud_buttons"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/hardware_buttons"
+            app:layout_constraintTop_toBottomOf="@+id/instruction"
+            >
+
+
+            <Button
+                android:id="@+id/local_button"
+                android:layout_width="100dp"
+                android:layout_height="40dp"
+                android:background="@drawable/hardware_button_inactive"
+                android:fontFamily="sans-serif-medium"
+                android:text="Local"
+                android:textColor="#FEF5E6"
+                android:textStyle="bold"
+                android:typeface="sans"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/azure_button"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <Button
+                android:id="@+id/azure_button"
+                android:layout_width="100dp"
+                android:layout_height="40dp"
+                android:background="@drawable/hardware_button_active"
+                android:fontFamily="sans-serif-medium"
+                android:text="Cloud"
+                android:textColor="#FEF5E6"
+                android:textStyle="bold"
+                android:typeface="sans"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/local_button"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/hardware_buttons"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginBottom="50dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/cloud_buttons"
+            >
+
+
+            <Button
+                android:id="@+id/respack_button"
+                android:layout_width="100dp"
+                android:layout_height="40dp"
+                android:background="@drawable/hardware_button_inactive"
+                android:fontFamily="sans-serif-medium"
+                android:text="Respack"
+                android:textColor="#FEF5E6"
+                android:textStyle="bold"
+                android:typeface="sans"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/thingy_button"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <Button
+                android:id="@+id/thingy_button"
+                android:layout_width="100dp"
+                android:layout_height="40dp"
+                android:background="@drawable/hardware_button_inactive"
+                android:fontFamily="sans-serif-medium"
+                android:text="Thingy"
+                android:textColor="#FEF5E6"
+                android:textStyle="bold"
+                android:typeface="sans"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/respack_button"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

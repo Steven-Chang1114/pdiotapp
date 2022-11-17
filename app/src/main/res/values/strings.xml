@@ -52,4 +52,13 @@
     <string name="thingy_accel">Accel = (%1$.3f, %2$.3f, %3$.3f)</string>
     <string name="thingy_gyro">Gyro = (%1$.3f, %2$.3f, %3$.3f)</string>
     <string name="thingy_mag">Mag = (%1$.3f, %2$.3f, %3$.3f)</string>
+    <string name="welcome_n_user">Welcome,\n{user}</string>
+    <string name="what_do_you_want_to_do">What do you want to do？</string>
+    <string name="action_nprediction">Action\nPrediction</string>
+    <string name="record_ndata">Record\nData</string>
+    <string name="live_nprocessing">Live\nProcessing</string>
+    <string name="connect_nsensor">Connect\nSensor</string>
+    <string name="personal_tasks">Personal Tasks</string>
+    <string name="historical_data">Historical Data</string>
+    <string name="sign_out">Sign out</string>
 </resources>

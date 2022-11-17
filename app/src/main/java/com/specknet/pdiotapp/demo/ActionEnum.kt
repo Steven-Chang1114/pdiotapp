@@ -14,6 +14,6 @@ enum class ActionEnum(val movement: String) {
     ASCENDING_STAIRS("Ascending stairs"),
     DESCENDING_STAIRS("Descending stairs"),
     DESK_WORK("Desk work"),
-    MOVEMENT("General movement"),
+    GENERAL_MOVEMENT("General movement"),
     LOADING("Loading")
 }
