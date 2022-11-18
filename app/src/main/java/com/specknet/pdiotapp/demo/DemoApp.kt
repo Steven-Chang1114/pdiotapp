@@ -45,7 +45,7 @@ class DemoApp : AppCompatActivity() {
     lateinit var actionImage: ImageView
     lateinit var title: TextView
 
-    var isRespackActive = false
+    var isRespackActive = true
     var isThingyActive = false
     var isCloudActive = true
 
