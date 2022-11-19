@@ -72,22 +72,29 @@ class MainActivity : AppCompatActivity() {
 
     fun setupClickListeners() {
         loginBtn.setOnClickListener {
-            auth.signInWithEmailAndPassword(email.text.toString().trim(), password.text.toString().trim())
-                .addOnCompleteListener(this) { task ->
-                    if (task.isSuccessful) {
-                        // Sign in success, update UI with the signed-in user's information
-                        Log.d("PDIOT_FIREBASE_AUTH", "signInWithEmail:success")
-                        val user = auth.currentUser
-                        if (user != null) {
-                            firebaseNavigateToMainPage(user)
+            if (email.text.toString().trim() == "" || password.text.toString().trim() == null) {
+                Toast.makeText(baseContext, "Please fill in the form above",
+                    Toast.LENGTH_SHORT).show()
+            } else {
+                auth.signInWithEmailAndPassword(email.text.toString().trim(), password.text.toString().trim())
+                    .addOnCompleteListener(this) { task ->
+                        if (task.isSuccessful) {
+                            // Sign in success, update UI with the signed-in user's information
+                            Log.d("PDIOT_FIREBASE_AUTH", "signInWithEmail:success")
+                            val user = auth.currentUser
+                            if (user != null) {
+                                firebaseNavigateToMainPage(user)
+                            }
+                        } else {
+                            // If sign in fails, display a message to the user.
+                            Log.w("PDIOT_FIREBASE_AUTH", "signInWithEmail:failure", task.exception)
+                            Toast.makeText(baseContext, task.exception.toString(),
+                                Toast.LENGTH_SHORT).show()
                         }
-                    } else {
-                        // If sign in fails, display a message to the user.
-                        Log.w("PDIOT_FIREBASE_AUTH", "signInWithEmail:failure", task.exception)
-                        Toast.makeText(baseContext, task.exception.toString(),
-                            Toast.LENGTH_SHORT).show()
                     }
-                }
+
+
+            }
         }
 
         signupBtn.setOnClickListener {
