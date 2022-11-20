@@ -18,6 +18,8 @@ import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.specknet.pdiotapp.R
 import com.specknet.pdiotapp.ml.Model
@@ -42,6 +44,7 @@ class DemoApp : AppCompatActivity() {
     lateinit var tflite : Interpreter
 
     lateinit var userId : String
+    lateinit var db : FirebaseFirestore
 
     lateinit var respackActiveBtn: Button
     lateinit var thingyActiveBtn: Button
@@ -271,6 +274,8 @@ class DemoApp : AppCompatActivity() {
         lastMovement = ActionEnum.GENERAL_MOVEMENT
         model = Model.newInstance(this)
 
+        db = Firebase.firestore
+
         respackActiveBtn = findViewById(R.id.respack_button)
         thingyActiveBtn = findViewById(R.id.thingy_button)
         cloudActiveBtn = findViewById(R.id.azure_button)
@@ -280,6 +285,34 @@ class DemoApp : AppCompatActivity() {
         title = findViewById(R.id.user)
 
         getUserId()
+
+//        val user = hashMapOf(
+//            "first" to "DBDBD",
+//            "middle" to "AAAA",
+//            "last" to "sfsefse",
+//            "born" to 300
+//        )
+//
+//        // Add a new document with a generated ID
+//        db.collection(userId)
+//            .add(user)
+//            .addOnSuccessListener { documentReference ->
+//                Log.d("DB_TEST", "DocumentSnapshot added with ID: ${documentReference.id}")
+//            }
+//            .addOnFailureListener { e ->
+//                Log.w("DB_TEST", "Error adding document", e)
+//            }
+
+//        db.collection(userId)
+//            .get()
+//            .addOnSuccessListener { result ->
+//                for (document in result) {
+//                    Log.d(TAG, "${document.id} => ${document.data}")
+//                }
+//            }
+//            .addOnFailureListener { exception ->
+//                Log.w(TAG, "Error getting documents.", exception)
+//            }
 
         val username = intent.getStringExtra("name")
         title.text = String.format("%s's\ncurrent action:", username)
