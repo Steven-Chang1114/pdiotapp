@@ -4,8 +4,6 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import android.graphics.Color
-import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.os.Handler
 import android.os.HandlerThread
@@ -14,6 +12,7 @@ import android.util.Log
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
@@ -21,6 +20,7 @@ import com.specknet.pdiotapp.R
 import com.specknet.pdiotapp.ml.Model
 import com.specknet.pdiotapp.utils.Constants
 import com.specknet.pdiotapp.utils.RESpeckLiveData
+import com.specknet.pdiotapp.utils.ThingyLiveData
 import org.tensorflow.lite.DataType
 import org.tensorflow.lite.Interpreter
 import org.tensorflow.lite.support.tensorbuffer.TensorBuffer
@@ -52,14 +52,18 @@ class DemoApp : AppCompatActivity() {
     lateinit var classifiedMovement: ActionEnum
     private lateinit var classifiedMovementField : TextView
 
-    var counter = 0
+    var respackCounter = 0
+    var thingyCounter = 0
     lateinit var allRespeckData: LineData
 
     // global broadcast receiver so we can unregister it
     lateinit var respeckLiveUpdateReceiver: BroadcastReceiver
+    lateinit var thingyLiveUpdateReceiver: BroadcastReceiver
     lateinit var looperRespeck: Looper
+    lateinit var looperThingy: Looper
 
     val filterTestRespeck = IntentFilter(Constants.ACTION_RESPECK_LIVE_BROADCAST)
+    val filterTestThingy = IntentFilter(Constants.ACTION_THINGY_BROADCAST)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -71,11 +75,57 @@ class DemoApp : AppCompatActivity() {
 
         setupClickListeners()
 
+        onRespackReceive()
+
+        onThingyReceive()
+
+    }
+
+    private fun onThingyReceive() {
+        // set up the broadcast receiver
+        thingyLiveUpdateReceiver = object : BroadcastReceiver() {
+            override fun onReceive(context: Context, intent: Intent) {
+
+                Log.i("Thingy_demo_thread", "I am running on thread = " + Thread.currentThread().name)
+
+                val action = intent.action
+
+                if (action == Constants.ACTION_THINGY_BROADCAST) {
+
+                    val liveData =
+                        intent.getSerializableExtra(Constants.THINGY_LIVE_DATA) as ThingyLiveData
+                    Log.d("Thingy_demo_Live", "onReceive: liveData = " + liveData)
+
+                    if (thingyCounter == 0) {
+                        Toast.makeText(baseContext, "Thingy is running",
+                            Toast.LENGTH_SHORT).show()
+                    }
+
+                    // get all relevant intent contents
+                    val x = liveData.accelX
+                    val y = liveData.accelY
+                    val z = liveData.accelZ
+
+                    thingyCounter += 1
+
+                }
+            }
+        }
+
+        // register receiver on another thread
+        val handlerThreadThingy = HandlerThread("bgThreadThingyLiveDemo")
+        handlerThreadThingy.start()
+        looperThingy = handlerThreadThingy.looper
+        val handlerThingy = Handler(looperThingy)
+        this.registerReceiver(thingyLiveUpdateReceiver, filterTestThingy, null, handlerThingy)
+    }
+
+    private fun onRespackReceive() {
         // set up the broadcast receiver
         respeckLiveUpdateReceiver = object : BroadcastReceiver() {
             override fun onReceive(context: Context, intent: Intent) {
 
-                Log.i("thread", "I am running on thread = " + Thread.currentThread().name)
+                Log.i("Respack_demo_thread", "I am running on thread = " + Thread.currentThread().name)
 
                 val action = intent.action
 
@@ -83,7 +133,12 @@ class DemoApp : AppCompatActivity() {
 
                     val liveData =
                         intent.getSerializableExtra(Constants.RESPECK_LIVE_DATA) as RESpeckLiveData
-                    Log.d("Live", "onReceive: liveData = " + liveData)
+                    Log.d("Respack_demo_Live", "onReceive: liveData = " + liveData)
+
+                    if (respackCounter == 0) {
+                        Toast.makeText(baseContext, "Respack is running",
+                            Toast.LENGTH_SHORT).show()
+                    }
 
                     // get all relevant intent contents
                     val accelX = liveData.accelX
@@ -95,12 +150,12 @@ class DemoApp : AppCompatActivity() {
                     val z = liveData.gyro.z
 
 //                    data.add(floatArrayOf(accelX, accelY, accelZ, x, y, z))
-                    floatArrayBuffer.put(floatArrayOf(accelX, accelY, accelZ, x, y, z))
+//                    floatArrayBuffer.put(floatArrayOf(accelX, accelY, accelZ, x, y, z))
 
                     // Send data to the ML model and run for update
-                    classifyMovement(floatArrayBuffer)
+//                    classifyMovement(floatArrayBuffer)
 
-                    counter += 1
+                    respackCounter += 1
                     // updateGraph("respeck", x, y, z)
 
                 }
@@ -108,12 +163,11 @@ class DemoApp : AppCompatActivity() {
         }
 
         // register receiver on another thread
-        val handlerThreadRespeck = HandlerThread("bgThreadRespeckLive")
+        val handlerThreadRespeck = HandlerThread("bgThreadRespeckDemo")
         handlerThreadRespeck.start()
         looperRespeck = handlerThreadRespeck.looper
         val handlerRespeck = Handler(looperRespeck)
         this.registerReceiver(respeckLiveUpdateReceiver, filterTestRespeck, null, handlerRespeck)
-
     }
 
     private fun setupClickListeners() {

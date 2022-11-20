@@ -7,7 +7,6 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.Button
-import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
@@ -50,7 +49,7 @@ class MainActivity : AppCompatActivity() {
         googleSignInClient = GoogleSignIn.getClient(this, gso)
 
         val firebaseAccount = auth.currentUser
-        val googleAuthAccount = GoogleSignIn.getLastSignedInAccount(this);
+        val googleAuthAccount = GoogleSignIn.getLastSignedInAccount(this)
         if (googleAuthAccount != null) {
             Log.d("PDIOT_FIREBASE_AUTH", "Google autodirect")
             googleNavigateToMainPage(googleAuthAccount)
