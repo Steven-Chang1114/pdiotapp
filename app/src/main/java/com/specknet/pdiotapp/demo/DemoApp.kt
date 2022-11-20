@@ -16,6 +16,9 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import com.specknet.pdiotapp.R
 import com.specknet.pdiotapp.ml.Model
 import com.specknet.pdiotapp.utils.Constants
@@ -37,6 +40,8 @@ class DemoApp : AppCompatActivity() {
     lateinit var floatArrayBuffer: FloatBuffer
     lateinit var lastMovement: ActionEnum
     lateinit var tflite : Interpreter
+
+    lateinit var userId : String
 
     lateinit var respackActiveBtn: Button
     lateinit var thingyActiveBtn: Button
@@ -274,11 +279,27 @@ class DemoApp : AppCompatActivity() {
         actionImage = findViewById(R.id.movement_img)
         title = findViewById(R.id.user)
 
+        getUserId()
+
         val username = intent.getStringExtra("name")
         title.text = String.format("%s's\ncurrent action:", username)
 
         classifiedMovementField.text = ActionEnum.LYING_DOWN_ON_THE_RIGHT_SIDE.movement
         actionImage.setBackgroundResource(R.drawable.general_movement)
+    }
+
+    private fun getUserId() {
+        val auth = Firebase.auth
+        val firebaseAccount = auth.currentUser
+        val googleAuthAccount = GoogleSignIn.getLastSignedInAccount(this)
+
+        if (googleAuthAccount != null) {
+            userId = googleAuthAccount.email.toString()
+        } else if (firebaseAccount != null) {
+            userId = firebaseAccount.uid
+        }
+
+        Log.d("PDIOT_FIREBASE_DEMO", userId)
     }
 
     private fun updatePage(action: ActionEnum) {
@@ -291,8 +312,10 @@ class DemoApp : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         unregisterReceiver(respeckLiveUpdateReceiver)
+        unregisterReceiver(thingyLiveUpdateReceiver)
         model.close()
         looperRespeck.quit()
+        looperThingy.quit()
     }
 
 }
