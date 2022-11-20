@@ -242,64 +242,38 @@ class DemoApp : AppCompatActivity() {
     private fun classifiedMovementOnCloud(respeckData : List<List<Float>>, thingyData: List<List<Float>>) {
         if (isrespeckActive && isThingyActive) {
             if (respeckData.size >= 50 && thingyData.size >= 50) {
-
-
-                val values = mapOf("type" to "both", "thingy_json" to thingyData.toString(), "respeck_json" to respeckData.toString())
-
-                Log.d("PDIOT_DEMO_CURRENT_RES_SIZE", respeckData.size.toString())
-                Log.d("PDIOT_DEMO_CURRENT_THI_SIZE", thingyData.size.toString())
-
-                Log.d("PDIOT_DEMO_INPUT", Gson().toJson(values).toString())
-
-                val (request, response, result) = "https://iot-inference.azurewebsites.net/api/inference"
-                    .httpPost()
-                    .jsonBody(Gson().toJson(values).toString())
-                    .responseString()
-
-                var movementId : Int
-
-                result.success { f -> movementId = f.toInt()
-                    Log.d("PDIOT_DEMO_RESULT_BOTH_CLOUD", movementId.toString())
-                }
-
-                result.onError { e ->  Log.e("PDIOT_DEMO_RESULT_BOTH_ERR", e.toString())}
-
+                sendDataToAzure("both", thingyData, respeckData, "PDIOT_DEMO_RESULT_BOTH_CLOUD", "PDIOT_DEMO_RESULT_BOTH_ERR")
             }
         } else if (isrespeckActive) {
             if (respeckData.size >= 50) {
-                val values = mapOf("type" to "respeck", "thingy_json" to thingyData.toString(), "respeck_json" to respeckData.toString())
-
-                val (request, response, result) = "https://iot-inference.azurewebsites.net/api/inference"
-                    .httpPost()
-                    .jsonBody(Gson().toJson(values).toString())
-                    .responseString()
-
-                var movementId : Int
-
-                result.success { f -> movementId = f.toInt()
-                    Log.d("PDIOT_DEMO_RESULT_RES_CLOUD", movementId.toString())
-                }
-
-                result.onError { e ->  Log.e("PDIOT_DEMO_RESULT_RES_ERROR", e.toString())}
+                sendDataToAzure("respeck", thingyData, respeckData, "PDIOT_DEMO_RESULT_RES_CLOUD", "PDIOT_DEMO_RESULT_RES_ERROR")
             }
         } else if (isThingyActive) {
             if (thingyData.size >= 50) {
-                val values = mapOf("type" to "thingy", "thingy_json" to thingyData.toString(), "respeck_json" to respeckData.toString())
-
-                val (request, response, result) = "https://iot-inference.azurewebsites.net/api/inference"
-                    .httpPost()
-                    .jsonBody(Gson().toJson(values).toString())
-                    .responseString()
-
-                var movementId : Int
-
-                result.success { f -> movementId = f.toInt()
-                    Log.d("PDIOT_DEMO_RESULT_THINGY_CLOUD", movementId.toString())
-                }
-
-                result.onError { e ->  Log.e("PDIOT_DEMO_RESULT_THINGY_ERROR", e.toString())}
+                sendDataToAzure("thingy", thingyData, respeckData, "PDIOT_DEMO_RESULT_THINGY_CLOUD", "PDIOT_DEMO_RESULT_THINGY_ERROR")
             }
         }
+    }
+
+    private fun sendDataToAzure(type: String, thingyData: List<List<Float>>, respeckData : List<List<Float>>, successTag: String, errorTag: String) {
+        val values = mapOf("type" to type, "thingy_json" to thingyData.toString(), "respeck_json" to respeckData.toString())
+
+//        Log.d("PDIOT_DEMO_CURRENT_RES_SIZE", respeckData.size.toString())
+//        Log.d("PDIOT_DEMO_CURRENT_THI_SIZE", thingyData.size.toString())
+        Log.d("PDIOT_DEMO_INPUT", Gson().toJson(values).toString())
+
+        val (request, response, result) = "https://iot-inference.azurewebsites.net/api/inference"
+            .httpPost()
+            .jsonBody(Gson().toJson(values).toString())
+            .responseString()
+
+        var movementId : Int
+
+        result.success { f -> movementId = f.toInt()
+            Log.d(successTag, selectMovements(movementId).movement)
+        }
+
+        result.onError { e ->  Log.e(errorTag, e.toString())}
     }
 
     private fun setupClickListeners() {
