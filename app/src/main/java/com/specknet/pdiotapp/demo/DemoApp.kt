@@ -120,12 +120,12 @@ class DemoApp : AppCompatActivity() {
                         intent.getSerializableExtra(Constants.THINGY_LIVE_DATA) as ThingyLiveData
                     Log.d("Thingy_demo_Live", "onReceive: liveData = " + liveData)
 
-                    if (thingyCounter == 0) {
-                        Toast.makeText(baseContext, "Thingy is running",
-                            Toast.LENGTH_SHORT).show()
-                    }
-
                     if (isThingyActive) {
+                        if (thingyCounter == 0) {
+                            Toast.makeText(baseContext, "Thingy is running",
+                                Toast.LENGTH_SHORT).show()
+                        }
+
                         // get all relevant intent contents
                         val timestamp = System.currentTimeMillis()/1000.toFloat();
 
@@ -141,7 +141,7 @@ class DemoApp : AppCompatActivity() {
                         val magY = liveData.mag.y
                         val magZ = liveData.mag.z
 
-                        val thingyArr = listOf(timestamp, accelX, accelY, accelZ, magX, magY, magZ)
+                        val thingyArr = listOf(timestamp, accelX, accelY, accelZ, gyroX, gyroY, gyroZ, magX, magY, magZ)
 
                         thingyData.add(thingyArr)
                         while (thingyData.size > 50) {
@@ -149,11 +149,13 @@ class DemoApp : AppCompatActivity() {
                         }
 
                         if (thingyData.size >= 50) {
-                            classifiedMovementOnCloud(respeckData.toList(), thingyData.toList())
+                            if (isCloudActive) {
+                                classifiedMovementOnCloud(respeckData.toList(), thingyData.toList())
+                            }
                         }
-                    }
 
-                    thingyCounter += 1
+                        thingyCounter += 1
+                    }
 
                 }
             }
@@ -183,12 +185,12 @@ class DemoApp : AppCompatActivity() {
                         intent.getSerializableExtra(Constants.RESPECK_LIVE_DATA) as RESpeckLiveData
                     Log.d("Respeck_demo_Live", "onReceive: liveData = " + liveData)
 
-                    if (respeckCounter == 0) {
-                        Toast.makeText(baseContext, "Respeck is running",
-                            Toast.LENGTH_SHORT).show()
-                    }
-
                     if (isrespeckActive) {
+                        if (respeckCounter == 0) {
+                            Toast.makeText(baseContext, "Respeck is running",
+                                Toast.LENGTH_SHORT).show()
+                        }
+
                         // get all relevant intent contents
                         val timestamp = System.currentTimeMillis()/1000.toFloat();
 
@@ -209,7 +211,9 @@ class DemoApp : AppCompatActivity() {
 
 
                         if (respeckData.size >= 50) {
-                            classifiedMovementOnCloud(respeckData.toList(), thingyData.toList())
+                            if (isCloudActive) {
+                                classifiedMovementOnCloud(respeckData.toList(), thingyData.toList())
+                            }
                         }
 
                         //                    data.add(floatArrayOf(accelX, accelY, accelZ, x, y, z))
@@ -218,9 +222,9 @@ class DemoApp : AppCompatActivity() {
                         // Send data to the ML model and run for update
 //                    classifyMovement(floatArrayBuffer)
                         // updateGraph("respeck", x, y, z)
-                    }
 
-                    respeckCounter += 1
+                        respeckCounter += 1
+                    }
 
                 }
             }
@@ -242,37 +246,58 @@ class DemoApp : AppCompatActivity() {
 
                 val values = mapOf("type" to "both", "thingy_json" to thingyData.toString(), "respeck_json" to respeckData.toString())
 
-//                Log.d("PDIOT_DEMO_CURRENT_RES_SIZE", respeckData.size.toString())
-//                Log.d("PDIOT_DEMO_CURRENT_THI_SIZE", thingyData.size.toString())
-//
-//                Log.d("PDIOT_DEMO_INPUT", Gson().toJson(values).toString())
+                Log.d("PDIOT_DEMO_CURRENT_RES_SIZE", respeckData.size.toString())
+                Log.d("PDIOT_DEMO_CURRENT_THI_SIZE", thingyData.size.toString())
 
-                val (_, _, result) = "https://iot-inference.azurewebsites.net/api/inference"
+                Log.d("PDIOT_DEMO_INPUT", Gson().toJson(values).toString())
+
+                val (request, response, result) = "https://iot-inference.azurewebsites.net/api/inference"
                     .httpPost()
                     .jsonBody(Gson().toJson(values).toString())
                     .responseString()
 
+                var movementId : Int
 
-                val gson = Gson()
-                var movementId : String
-
-                result.success { f -> movementId = result.get()[0].toString()
-//                    gson.fromJson(f, MutableMap::class.java)["result"].get(0).toString()
-
-                    Log.d("PDIOT_DEMO_RESULT", movementId)
+                result.success { f -> movementId = f.toInt()
+                    Log.d("PDIOT_DEMO_RESULT_BOTH_CLOUD", movementId.toString())
                 }
 
-                result.onError { e ->  Log.e("PDIOT_DEMO_RESULT", e.toString())}
+                result.onError { e ->  Log.e("PDIOT_DEMO_RESULT_BOTH_ERR", e.toString())}
 
             }
         } else if (isrespeckActive) {
             if (respeckData.size >= 50) {
+                val values = mapOf("type" to "respeck", "thingy_json" to thingyData.toString(), "respeck_json" to respeckData.toString())
 
+                val (request, response, result) = "https://iot-inference.azurewebsites.net/api/inference"
+                    .httpPost()
+                    .jsonBody(Gson().toJson(values).toString())
+                    .responseString()
+
+                var movementId : Int
+
+                result.success { f -> movementId = f.toInt()
+                    Log.d("PDIOT_DEMO_RESULT_RES_CLOUD", movementId.toString())
+                }
+
+                result.onError { e ->  Log.e("PDIOT_DEMO_RESULT_RES_ERROR", e.toString())}
             }
-
         } else if (isThingyActive) {
             if (thingyData.size >= 50) {
+                val values = mapOf("type" to "thingy", "thingy_json" to thingyData.toString(), "respeck_json" to respeckData.toString())
 
+                val (request, response, result) = "https://iot-inference.azurewebsites.net/api/inference"
+                    .httpPost()
+                    .jsonBody(Gson().toJson(values).toString())
+                    .responseString()
+
+                var movementId : Int
+
+                result.success { f -> movementId = f.toInt()
+                    Log.d("PDIOT_DEMO_RESULT_THINGY_CLOUD", movementId.toString())
+                }
+
+                result.onError { e ->  Log.e("PDIOT_DEMO_RESULT_THINGY_ERROR", e.toString())}
             }
         }
     }

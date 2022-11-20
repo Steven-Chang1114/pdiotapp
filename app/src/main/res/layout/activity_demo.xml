@@ -82,7 +82,7 @@
             android:paddingStart="30dp"
             android:layout_marginTop="10dp"
             android:textColor="#112758"
-            android:textSize="18sp"
+            android:textSize="15sp"
             android:textStyle="bold"
             android:typeface="sans"
             app:layout_constraintEnd_toEndOf="parent"
