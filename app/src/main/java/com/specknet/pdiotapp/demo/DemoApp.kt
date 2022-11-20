@@ -12,9 +12,10 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
-import com.fasterxml.jackson.databind.ObjectMapper
 import com.github.kittinunf.fuel.core.extensions.jsonBody
 import com.github.kittinunf.fuel.httpPost
+import com.github.kittinunf.result.onError
+import com.github.kittinunf.result.success
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
 import com.google.android.gms.auth.api.signin.GoogleSignIn
@@ -28,13 +29,7 @@ import com.specknet.pdiotapp.ml.Model
 import com.specknet.pdiotapp.utils.Constants
 import com.specknet.pdiotapp.utils.RESpeckLiveData
 import com.specknet.pdiotapp.utils.ThingyLiveData
-import org.json.JSONArray
-import org.tensorflow.lite.DataType
 import org.tensorflow.lite.Interpreter
-import org.tensorflow.lite.support.tensorbuffer.TensorBuffer
-import java.net.HttpURLConnection
-import java.net.URI
-import java.net.URL
 import java.nio.FloatBuffer
 import java.time.Instant
 import java.time.ZoneOffset
@@ -112,6 +107,7 @@ class DemoApp : AppCompatActivity() {
     private fun onThingyReceive() {
         // set up the broadcast receiver
         thingyLiveUpdateReceiver = object : BroadcastReceiver() {
+            @RequiresApi(Build.VERSION_CODES.O)
             override fun onReceive(context: Context, intent: Intent) {
 
                 Log.i("Thingy_demo_thread", "I am running on thread = " + Thread.currentThread().name)
@@ -147,12 +143,10 @@ class DemoApp : AppCompatActivity() {
 
                         val thingyArr = listOf(timestamp, accelX, accelY, accelZ, magX, magY, magZ)
 
+                        thingyData.add(thingyArr)
                         while (thingyData.size > 50) {
-                            Log.d("PDIOT_DEMO_CURRENT_THI_SIZE", thingyData.size.toString())
                             thingyData.removeAt(0)
                         }
-
-                        thingyData.add(thingyArr)
 
                         if (thingyData.size >= 50) {
                             classifiedMovementOnCloud(respeckData.toList(), thingyData.toList())
@@ -176,6 +170,7 @@ class DemoApp : AppCompatActivity() {
     private fun onrespeckReceive() {
         // set up the broadcast receiver
         respeckLiveUpdateReceiver = object : BroadcastReceiver() {
+            @RequiresApi(Build.VERSION_CODES.O)
             override fun onReceive(context: Context, intent: Intent) {
 
                 Log.i("respeck_demo_thread", "I am running on thread = " + Thread.currentThread().name)
@@ -207,12 +202,10 @@ class DemoApp : AppCompatActivity() {
 
                         val resultArr = listOf(timestamp, accelX, accelY, accelZ, gyroX, gyroY, gyroZ)
 
+                        respeckData.add(resultArr)
                         while (respeckData.size > 50) {
-                            Log.d("PDIOT_DEMO_CURRENT_RES_SIZE", respeckData.size.toString())
                             respeckData.removeAt(0)
                         }
-
-                        respeckData.add(resultArr)
 
 
                         if (respeckData.size >= 50) {
@@ -247,16 +240,29 @@ class DemoApp : AppCompatActivity() {
             if (respeckData.size >= 50 && thingyData.size >= 50) {
 
 
-                val values = Gson().toJson(mapOf("type" to "both", "thingy_json" to thingyData.toString(), "respeck_json" to respeckData.toString()))
+                val values = mapOf("type" to "both", "thingy_json" to thingyData.toString(), "respeck_json" to respeckData.toString())
 
-//                saveData(values)
-                Log.d("PDIOT_DEMO_INPUT", listOf("json" to values).toString())
+//                Log.d("PDIOT_DEMO_CURRENT_RES_SIZE", respeckData.size.toString())
+//                Log.d("PDIOT_DEMO_CURRENT_THI_SIZE", thingyData.size.toString())
+//
+//                Log.d("PDIOT_DEMO_INPUT", Gson().toJson(values).toString())
 
-                val (_, _, result) = "https://pdiot.azurewebsites.net/api/inferencehttptrigger"
-                    .httpPost(listOf("json" to values))
+                val (_, _, result) = "https://iot-inference.azurewebsites.net/api/inference"
+                    .httpPost()
+                    .jsonBody(Gson().toJson(values).toString())
                     .responseString()
 
-                Log.d("PDIOT_DEMO_RESULT", result.toString())
+
+                val gson = Gson()
+                var movementId : String
+
+                result.success { f -> movementId = result.get()[0].toString()
+//                    gson.fromJson(f, MutableMap::class.java)["result"].get(0).toString()
+
+                    Log.d("PDIOT_DEMO_RESULT", movementId)
+                }
+
+                result.onError { e ->  Log.e("PDIOT_DEMO_RESULT", e.toString())}
 
             }
         } else if (isrespeckActive) {
