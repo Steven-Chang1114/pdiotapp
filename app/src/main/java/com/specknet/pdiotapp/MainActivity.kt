@@ -72,7 +72,7 @@ class MainActivity : AppCompatActivity() {
 
     fun setupClickListeners() {
         loginBtn.setOnClickListener {
-            if (email.text.toString().trim() == "" || password.text.toString().trim() == null) {
+            if (email.text.toString().trim() == "" || password.text.toString().trim() == "") {
                 Toast.makeText(baseContext, "Please fill in the form above",
                     Toast.LENGTH_SHORT).show()
             } else {
