@@ -150,7 +150,7 @@ class DemoApp : AppCompatActivity() {
 
                         if (thingyData.size >= 50) {
                             if (isCloudActive) {
-                                classifiedMovementOnCloud(respeckData.toList(), thingyData.toList())
+                                classifiedMovementOnCloud()
                             }
                         }
 
@@ -209,10 +209,9 @@ class DemoApp : AppCompatActivity() {
                             respeckData.removeAt(0)
                         }
 
-
                         if (respeckData.size >= 50) {
                             if (isCloudActive) {
-                                classifiedMovementOnCloud(respeckData.toList(), thingyData.toList())
+                                classifiedMovementOnCloud()
                             }
                         }
 
@@ -239,18 +238,25 @@ class DemoApp : AppCompatActivity() {
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    private fun classifiedMovementOnCloud(respeckData : List<List<Float>>, thingyData: List<List<Float>>) {
+    private fun classifiedMovementOnCloud() {
+        val respeckList = respeckData.toList()
+        val thingyList = thingyData.toList()
+
         if (isrespeckActive && isThingyActive) {
             if (respeckData.size >= 50 && thingyData.size >= 50) {
-                sendDataToAzure("both", thingyData, respeckData, "PDIOT_DEMO_RESULT_BOTH_CLOUD", "PDIOT_DEMO_RESULT_BOTH_ERR")
+                sendDataToAzure("both", thingyList, respeckList, "PDIOT_DEMO_RESULT_BOTH_CLOUD", "PDIOT_DEMO_RESULT_BOTH_ERR")
+                respeckData = mutableListOf()
+                thingyData = mutableListOf()
             }
         } else if (isrespeckActive) {
             if (respeckData.size >= 50) {
-                sendDataToAzure("respeck", thingyData, respeckData, "PDIOT_DEMO_RESULT_RES_CLOUD", "PDIOT_DEMO_RESULT_RES_ERROR")
+                sendDataToAzure("respeck", thingyList, respeckList, "PDIOT_DEMO_RESULT_RES_CLOUD", "PDIOT_DEMO_RESULT_RES_ERROR")
+                respeckData = mutableListOf()
             }
         } else if (isThingyActive) {
             if (thingyData.size >= 50) {
-                sendDataToAzure("thingy", thingyData, respeckData, "PDIOT_DEMO_RESULT_THINGY_CLOUD", "PDIOT_DEMO_RESULT_THINGY_ERROR")
+                sendDataToAzure("thingy", thingyList, respeckList, "PDIOT_DEMO_RESULT_THINGY_CLOUD", "PDIOT_DEMO_RESULT_THINGY_ERROR")
+                thingyData = mutableListOf()
             }
         }
     }
@@ -357,7 +363,7 @@ class DemoApp : AppCompatActivity() {
             0 -> ActionEnum.DESK_WORK
             1 -> ActionEnum.WALKING_AT_NORMAL_SPEED
             2 -> ActionEnum.STANDING
-            3 -> ActionEnum.SITTING_BENT_BACKWARD
+            3 -> ActionEnum.SITTING_BENT_FORWARD
             4 -> ActionEnum.SITTING_STRAIGHT
             5 -> ActionEnum.SITTING_BENT_BACKWARD
             6 -> ActionEnum.LYING_DOWN_ON_THE_RIGHT_SIDE
@@ -377,8 +383,8 @@ class DemoApp : AppCompatActivity() {
         model = Model.newInstance(this)
         db = Firebase.firestore
 
-        respeckData = mutableListOf<List<Float>>()
-        thingyData = mutableListOf<List<Float>>()
+        respeckData = mutableListOf()
+        thingyData = mutableListOf()
 
         respeckActiveBtn = findViewById(R.id.respeck_button)
         thingyActiveBtn = findViewById(R.id.thingy_button)
