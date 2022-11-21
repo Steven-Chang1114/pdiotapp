@@ -160,12 +160,15 @@
         </service>
 
         <activity
+            android:exported="true"
             android:name=".onboarding.OnBoardingActivity"
             android:screenOrientation="portrait" />
         <activity
+            android:exported="true"
             android:name=".RecordingActivity"
             android:screenOrientation="portrait" />
         <activity
+            android:exported="true"
             android:name=".MainActivity"
             android:screenOrientation="portrait">
             <intent-filter>

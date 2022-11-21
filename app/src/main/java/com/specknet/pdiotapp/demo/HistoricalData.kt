@@ -1,27 +1,125 @@
 package com.specknet.pdiotapp.demo
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
+import android.widget.ImageView
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import com.github.mikephil.charting.charts.PieChart
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import com.specknet.pdiotapp.HomePage
 import com.specknet.pdiotapp.R
 
-class HistoricalData : AppCompatActivity() {
 
-    lateinit var userId : String
+class HistoricalData : AppCompatActivity() {
     lateinit var db : FirebaseFirestore
+
+    lateinit var backBtn : ImageView
+    lateinit var title: TextView
+    lateinit var respeckBtn: Button
+    lateinit var thingyBtn: Button
+    lateinit var bothBtn: Button
+
+    lateinit var curType: String
+    lateinit var userId : String
+    lateinit var chart: PieChart
+
+    var isThingySelected = false
+    var isRespeckSelected = false
+    var isBothSelected = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.historical_data)
 
+        setUpPage()
+
+        setupClickListeners()
+
+
+
+
+
+    }
+
+    private fun setupClickListeners() {
+        respeckBtn.setOnClickListener {
+            if (!isRespeckSelected) {
+                isThingySelected = false
+                thingyBtn.setBackgroundResource(R.drawable.hardware_button_inactive)
+
+                isBothSelected = false
+                bothBtn.setBackgroundResource(R.drawable.hardware_button_inactive)
+
+                isRespeckSelected = true
+                respeckBtn.setBackgroundResource(R.drawable.hardware_button_active)
+            }
+        }
+
+        thingyBtn.setOnClickListener {
+            if (!isThingySelected) {
+                isRespeckSelected = false
+                respeckBtn.setBackgroundResource(R.drawable.hardware_button_inactive)
+
+                isBothSelected = false
+                bothBtn.setBackgroundResource(R.drawable.hardware_button_inactive)
+
+                isThingySelected = true
+                thingyBtn.setBackgroundResource(R.drawable.hardware_button_active)
+            }
+        }
+
+        bothBtn.setOnClickListener {
+            if (!isBothSelected) {
+                isRespeckSelected = false
+                respeckBtn.setBackgroundResource(R.drawable.hardware_button_inactive)
+
+                isThingySelected = false
+                thingyBtn.setBackgroundResource(R.drawable.hardware_button_inactive)
+
+                isBothSelected = true
+                bothBtn.setBackgroundResource(R.drawable.hardware_button_active)
+            }
+        }
+
+        backBtn.setOnClickListener {
+            this.finish()
+
+            val intent = Intent(this, HomePage::class.java)
+
+            val auth = Firebase.auth
+            val firebaseAccount = auth.currentUser
+            val googleAuthAccount = GoogleSignIn.getLastSignedInAccount(this)
+
+            if (googleAuthAccount != null) {
+                intent.putExtra("name" , googleAuthAccount.displayName)
+            } else if (firebaseAccount != null) {
+                intent.putExtra("name" , firebaseAccount.displayName)
+            }
+
+            startActivity(intent)
+            overridePendingTransition(R.anim.right_to_left, R.anim.left_to_right);
+        }
+    }
+
+    private fun setUpPage() {
         db = Firebase.firestore
         getUserId()
+
+        backBtn = findViewById(R.id.back_btn)
+        title = findViewById(R.id.user)
+        respeckBtn = findViewById(R.id.respeck_btn)
+        thingyBtn = findViewById(R.id.thingy_btn)
+        bothBtn = findViewById(R.id.both_btn)
+
+        val username = intent.getStringExtra("name")
+        title.text = String.format("%s's\nHistorical Data:", username)
     }
 
     private fun readData() {
