@@ -12,6 +12,7 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import com.github.mikephil.charting.animation.Easing
 import com.github.mikephil.charting.charts.PieChart
 import com.github.mikephil.charting.components.Legend
 import com.github.mikephil.charting.data.PieData
@@ -19,7 +20,6 @@ import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
 import com.github.mikephil.charting.formatter.PercentFormatter
 import com.github.mikephil.charting.utils.ColorTemplate
-import com.github.mikephil.charting.utils.MPPointF
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -54,52 +54,73 @@ class HistoricalData : AppCompatActivity() {
 
         setupClickListeners()
 
+        setUpPieChart()
+
+    }
+
+    private fun setUpPieChart() {
         chart = findViewById(R.id.chart1);
+        chart.setUsePercentValues(true);
+        chart.getDescription().setEnabled(false);
 
+        chart.setDrawHoleEnabled(true);
+        chart.setHoleColor(Color.parseColor("#FEF5E6"));
 
-        setData(5, 100);
+        chart.setTransparentCircleColor(Color.parseColor("#FEF5E6"));
+        chart.setTransparentCircleAlpha(110);
 
+        chart.setHoleRadius(40f);
+        chart.setTransparentCircleRadius(43f);
 
+        chart.animateY(1400, Easing.EaseInOutQuad);
 
+        chart.legend.isEnabled = false
+        chart.setEntryLabelTextSize(8f)
+
+        setData(7, 100);
     }
 
     @SuppressLint("UseCompatLoadingForDrawables")
     private fun setData(count: Int, range: Int) {
         val values: ArrayList<PieEntry> = ArrayList()
         for (i in 0 until count) {
-            val icon = resources.getDrawable(R.drawable.desk_work)
-            val bitmap = (icon as BitmapDrawable).bitmap
-            val d: Drawable =
-                BitmapDrawable(resources,
-                    Bitmap.createScaledBitmap(
-                        bitmap,
-                        10,
-                        10,
-                        true
-                    )
-                )
+//            val icon = resources.getDrawable(R.drawable.desk_work)
+//            val bitmap = (icon as BitmapDrawable).bitmap
+//            val d: Drawable =
+//                BitmapDrawable(resources,
+//                    Bitmap.createScaledBitmap(
+//                        bitmap,
+//                        20,
+//                        20,
+//                        true
+//                    )
+//                )
 
             values.add(
                 PieEntry(
                     (Math.random() * range + range / 5).toFloat(),
-                    "AHDWHDWH",
-                    d,
-                    20,
+                    "AHDWHDWH"
                 )
             )
         }
 
-        val dataSet = PieDataSet(values, "Election Results")
+        val dataSet = PieDataSet(values, "Historical Movements")
+        dataSet.setDrawIcons(true);
         dataSet.sliceSpace = 3f
         dataSet.selectionShift = 5f
         dataSet.setColors(*ColorTemplate.MATERIAL_COLORS);
+
         //dataSet.setSelectionShift(0f);
         val data = PieData(dataSet)
-        data.setValueFormatter(PercentFormatter())
+        data.setValueFormatter(PercentFormatter(chart))
         data.setValueTextSize(11f)
         data.setValueTextColor(Color.parseColor("#FEF5E6"))
         chart.data = data
-        chart.invalidate()
+
+        // undo all highlights
+        chart.highlightValues(null);
+
+        chart.invalidate();
     }
 
     private fun setupClickListeners() {
