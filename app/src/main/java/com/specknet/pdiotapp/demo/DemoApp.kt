@@ -25,11 +25,13 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.gson.Gson
 import com.specknet.pdiotapp.R
-import com.specknet.pdiotapp.ml.Model
+import com.specknet.pdiotapp.ml.RespeckModel
 import com.specknet.pdiotapp.utils.Constants
 import com.specknet.pdiotapp.utils.RESpeckLiveData
 import com.specknet.pdiotapp.utils.ThingyLiveData
+import org.tensorflow.lite.DataType
 import org.tensorflow.lite.Interpreter
+import org.tensorflow.lite.support.tensorbuffer.TensorBuffer
 import java.nio.FloatBuffer
 import java.time.Instant
 import java.time.ZoneOffset
@@ -42,12 +44,13 @@ class DemoApp : AppCompatActivity() {
     lateinit var dataSet_res_accel_y: LineDataSet
     lateinit var dataSet_res_accel_z: LineDataSet
 
-    lateinit var data : MutableList<FloatArray>
     lateinit var respeckData : MutableList<List<Float>>
+    lateinit var respeckBuffer: FloatBuffer
     lateinit var thingyData : MutableList<List<Float>>
 
-    lateinit var model: Model
-    lateinit var floatArrayBuffer: FloatBuffer
+    lateinit var respeckModel: RespeckModel
+    lateinit var thingyModel: RespeckModel
+
     lateinit var lastMovement: ActionEnum
     lateinit var tflite : Interpreter
 
@@ -61,7 +64,7 @@ class DemoApp : AppCompatActivity() {
     lateinit var actionImage: ImageView
     lateinit var title: TextView
 
-    var isrespeckActive = true
+    var isRespeckActive = true
     var isThingyActive = false
     var isCloudActive = true
 
@@ -85,7 +88,7 @@ class DemoApp : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_demo)
 
-        floatArrayBuffer = FloatBuffer.allocate(500)
+        respeckBuffer = FloatBuffer.allocate(500)
 
         setupPage()
 
@@ -101,6 +104,27 @@ class DemoApp : AppCompatActivity() {
         runOnUiThread {
             // Stuff that updates the UI
             classifiedMovementField.text = action.movement
+            actionImage.setBackgroundResource(getImageFile(action))
+        }
+    }
+
+    private fun getImageFile(action: ActionEnum): Int {
+        return when (action) {
+            ActionEnum.DESK_WORK -> R.drawable.desk_work
+            ActionEnum.WALKING_AT_NORMAL_SPEED -> R.drawable.walk
+            ActionEnum.STANDING -> R.drawable.standing
+            ActionEnum.SITTING_BENT_FORWARD -> R.drawable.sit_forward
+            ActionEnum.SITTING_STRAIGHT -> R.drawable.sit_straight
+            ActionEnum.SITTING_BENT_BACKWARD -> R.drawable.sit_backward
+            ActionEnum.LYING_DOWN_ON_THE_RIGHT_SIDE -> R.drawable.lying_down_on_right
+            ActionEnum.LYING_DOWN_ON_THE_LEFT_SIDE -> R.drawable.lying_down_on_left
+            ActionEnum.LYING_DOWN_ON_THE_BACK -> R.drawable.lying_down_on_back
+            ActionEnum.LYING_DOWN_ON_STOMACH -> R.drawable.lying_down_on_stomach
+            ActionEnum.GENERAL_MOVEMENT -> R.drawable.general_movement
+            ActionEnum.RUNNING -> R.drawable.running
+            ActionEnum.ASCENDING_STAIRS -> R.drawable.climbing_stairs
+            ActionEnum.DESCENDING_STAIRS -> R.drawable.descending_stairs
+            else -> R.drawable.general_movement
         }
     }
 
@@ -151,6 +175,8 @@ class DemoApp : AppCompatActivity() {
                         if (thingyData.size >= 50) {
                             if (isCloudActive) {
                                 classifiedMovementOnCloud()
+                            } else {
+//                                classifiedMovementLocal()
                             }
                         }
 
@@ -185,7 +211,7 @@ class DemoApp : AppCompatActivity() {
                         intent.getSerializableExtra(Constants.RESPECK_LIVE_DATA) as RESpeckLiveData
                     Log.d("Respeck_demo_Live", "onReceive: liveData = " + liveData)
 
-                    if (isrespeckActive) {
+                    if (isRespeckActive) {
                         if (respeckCounter == 0) {
                             Toast.makeText(baseContext, "Respeck is running",
                                 Toast.LENGTH_SHORT).show()
@@ -212,15 +238,12 @@ class DemoApp : AppCompatActivity() {
                         if (respeckData.size >= 50) {
                             if (isCloudActive) {
                                 classifiedMovementOnCloud()
+                            } else {
+//                                respeckBuffer.add(floatArrayOf(accelX, accelY, accelZ, gyroX, gyroY, gyroZ))
+                                respeckBuffer.put(floatArrayOf(accelX, accelY, accelZ, gyroX, gyroY, gyroZ))
+                                classifiedMovementRecpeckLocal(respeckBuffer)
                             }
                         }
-
-                        //                    data.add(floatArrayOf(accelX, accelY, accelZ, x, y, z))
-//                    floatArrayBuffer.put(floatArrayOf(accelX, accelY, accelZ, x, y, z))
-
-                        // Send data to the ML model and run for update
-//                    classifyMovement(floatArrayBuffer)
-                        // updateGraph("respeck", x, y, z)
 
                         respeckCounter += 1
                     }
@@ -237,18 +260,44 @@ class DemoApp : AppCompatActivity() {
         this.registerReceiver(respeckLiveUpdateReceiver, filterTestRespeck, null, handlerRespeck)
     }
 
+
+    private fun classifiedMovementRecpeckLocal(floatArrayBuffer: FloatBuffer) {
+        if (isRespeckActive) {
+            val inputArray = floatArrayBuffer.array().sliceArray(IntRange(0, 299))
+            val inputFeature0 = TensorBuffer.createFixedSize(intArrayOf(1, 50, 6), DataType.FLOAT32)
+            inputFeature0.loadArray(inputArray)
+
+            floatArrayBuffer.clear()
+
+            val output = respeckModel.process(inputFeature0).outputFeature0AsTensorBuffer.floatArray
+//            output.indexOf(output.max()!!)
+
+            val outputList = output.toList()
+            val movementIdx = outputList.indexOf(outputList.maxOrNull() ?: 0)
+            val currentMovement = selectMovements(movementIdx)
+
+            Log.i("PDIOT_DEMO_RESULT_RES_Local", currentMovement.movement)
+
+            lastMovement = currentMovement
+            updatePage(lastMovement)
+        } else if (isThingyActive) {
+
+        }
+    }
+
+
     @RequiresApi(Build.VERSION_CODES.O)
     private fun classifiedMovementOnCloud() {
         val respeckList = respeckData.toList()
         val thingyList = thingyData.toList()
 
-        if (isrespeckActive && isThingyActive) {
+        if (isRespeckActive && isThingyActive) {
             if (respeckData.size >= 50 && thingyData.size >= 50) {
                 sendDataToAzure("both", thingyList, respeckList, "PDIOT_DEMO_RESULT_BOTH_CLOUD", "PDIOT_DEMO_RESULT_BOTH_ERR")
                 respeckData = mutableListOf()
                 thingyData = mutableListOf()
             }
-        } else if (isrespeckActive) {
+        } else if (isRespeckActive) {
             if (respeckData.size >= 50) {
                 sendDataToAzure("respeck", thingyList, respeckList, "PDIOT_DEMO_RESULT_RES_CLOUD", "PDIOT_DEMO_RESULT_RES_ERROR")
                 respeckData = mutableListOf()
@@ -277,6 +326,8 @@ class DemoApp : AppCompatActivity() {
 
         result.success { f -> movementId = f.toInt()
             Log.d(successTag, selectMovements(movementId).movement)
+            lastMovement = selectMovements(movementId)
+            updatePage(lastMovement)
         }
 
         result.onError { e ->  Log.e(errorTag, e.toString())}
@@ -284,11 +335,11 @@ class DemoApp : AppCompatActivity() {
 
     private fun setupClickListeners() {
         respeckActiveBtn.setOnClickListener {
-            if (isrespeckActive) {
-                isrespeckActive = false
+            if (isRespeckActive) {
+                isRespeckActive = false
                 respeckActiveBtn.setBackgroundResource(R.drawable.hardware_button_inactive)
             } else {
-                isrespeckActive = true
+                isRespeckActive = true
                 respeckActiveBtn.setBackgroundResource(R.drawable.hardware_button_active)
             }
 
@@ -313,9 +364,6 @@ class DemoApp : AppCompatActivity() {
             if (!isCloudActive)  {
                 isCloudActive = true
 
-                actionImage.setBackgroundResource(R.drawable.lying_down_on_back)
-
-                classifiedMovementField.text = ActionEnum.LYING_DOWN_ON_THE_BACK.movement
                 cloudActiveBtn.setBackgroundResource(R.drawable.hardware_button_active)
                 localActiveBtn.setBackgroundResource(R.drawable.hardware_button_inactive)
             }
@@ -324,10 +372,6 @@ class DemoApp : AppCompatActivity() {
         localActiveBtn.setOnClickListener {
             if (isCloudActive) {
                 isCloudActive = false
-
-                actionImage.setBackgroundResource(R.drawable.standing)
-
-                classifiedMovementField.text = ActionEnum.STANDING.movement
 
                 cloudActiveBtn.setBackgroundResource(R.drawable.hardware_button_inactive)
                 localActiveBtn.setBackgroundResource(R.drawable.hardware_button_active)
@@ -374,13 +418,15 @@ class DemoApp : AppCompatActivity() {
             11 -> ActionEnum.RUNNING
             12 -> ActionEnum.ASCENDING_STAIRS
             13 -> ActionEnum.DESCENDING_STAIRS
-            else -> ActionEnum.LOADING
+            else -> ActionEnum.GENERAL_MOVEMENT
         }
     }
 
     private fun setupPage() {
         lastMovement = ActionEnum.GENERAL_MOVEMENT
-        model = Model.newInstance(this)
+        respeckModel = RespeckModel.newInstance(this)
+//        thingyModel = Model.newInstance(this)
+
         db = Firebase.firestore
 
         respeckData = mutableListOf()
@@ -458,7 +504,8 @@ class DemoApp : AppCompatActivity() {
         respeckData = mutableListOf<List<Float>>()
         thingyData = mutableListOf<List<Float>>()
 
-        model.close()
+        respeckModel.close()
+//        thingyModel.close()
 
         looperRespeck.quit()
         looperThingy.quit()
