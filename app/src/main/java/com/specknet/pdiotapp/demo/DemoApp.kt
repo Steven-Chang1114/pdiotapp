@@ -518,8 +518,9 @@ class DemoApp : AppCompatActivity() {
         db.collection(userId)
             .add(hashMapOf(
                 "type" to type,
-                curTimestamp to movement,
-                movement to data
+                "time" to curTimestamp,
+                "movement" to movement,
+                "data" to data
             ))
             .addOnSuccessListener { documentReference ->
                 Log.d("PDIOT_DB", "DocumentSnapshot added with ID: ${documentReference.id}")
