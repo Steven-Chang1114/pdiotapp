@@ -1,6 +1,11 @@
 package com.specknet.pdiotapp.demo
 
+import android.annotation.SuppressLint
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.Color
+import android.graphics.drawable.BitmapDrawable
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
@@ -8,6 +13,12 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.github.mikephil.charting.charts.PieChart
+import com.github.mikephil.charting.components.Legend
+import com.github.mikephil.charting.data.PieData
+import com.github.mikephil.charting.data.PieDataSet
+import com.github.mikephil.charting.data.PieEntry
+import com.github.mikephil.charting.formatter.PercentFormatter
+import com.github.mikephil.charting.utils.ColorTemplate
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -42,10 +53,89 @@ class HistoricalData : AppCompatActivity() {
 
         setupClickListeners()
 
+        chart = findViewById(R.id.chart1);
+        chart.setUsePercentValues(true);
+        chart.getDescription().setEnabled(false);
+
+        chart.setDragDecelerationFrictionCoef(0.95f);
+
+        chart.setDrawHoleEnabled(true);
+        chart.setHoleColor(Color.parseColor("#FEF5E6"));
+
+        chart.setTransparentCircleColor(Color.parseColor("#FEF5E6"));
+        chart.setTransparentCircleAlpha(110);
+
+        chart.setHoleRadius(58f);
+        chart.setTransparentCircleRadius(61f);
+
+        chart.setDrawCenterText(true);
+
+        chart.setRotationAngle(0F);
+        // enable rotation of the chart by touch
+        chart.setRotationEnabled(true);
+        chart.setHighlightPerTapEnabled(true);
+
+
+        chart.setMaxAngle(180f); // HALF CHART
+        chart.setRotationAngle(180f);
+        chart.setCenterTextOffset(0F, -20F);
+
+        setData(5, 100);
+
+        val l = chart.legend
+        l.verticalAlignment = Legend.LegendVerticalAlignment.TOP
+        l.horizontalAlignment = Legend.LegendHorizontalAlignment.CENTER
+        l.orientation = Legend.LegendOrientation.HORIZONTAL
+        l.setDrawInside(false)
+        l.xEntrySpace = 7f
+        l.yEntrySpace = 0f
+        l.yOffset = 0f
+
+        // entry label styling
+        chart.setEntryLabelColor(Color.WHITE)
+        chart.setEntryLabelTextSize(12f)
 
 
 
+    }
 
+    @SuppressLint("UseCompatLoadingForDrawables")
+    private fun setData(count: Int, range: Int) {
+        val values: ArrayList<PieEntry> = ArrayList()
+        for (i in 0 until count) {
+            val icon = resources.getDrawable(R.drawable.desk_work)
+            val bitmap = (icon as BitmapDrawable).bitmap
+            val d: Drawable =
+                BitmapDrawable(resources,
+                    Bitmap.createScaledBitmap(
+                        bitmap,
+                        10,
+                        10,
+                        true
+                    )
+                )
+
+            values.add(
+                PieEntry(
+                    (Math.random() * range + range / 5).toFloat(),
+                    "AHDWHDWH",
+                    d,
+                    20,
+                )
+            )
+        }
+
+        val dataSet = PieDataSet(values, "Election Results")
+        dataSet.sliceSpace = 3f
+        dataSet.selectionShift = 5f
+        dataSet.setColors(*ColorTemplate.MATERIAL_COLORS);
+        //dataSet.setSelectionShift(0f);
+        val data = PieData(dataSet)
+        data.setValueFormatter(PercentFormatter())
+        data.setValueTextSize(11f)
+        data.setValueTextColor(Color.parseColor("#FEF5E6"))
+        chart.data = data
+        chart.invalidate()
     }
 
     private fun setupClickListeners() {
