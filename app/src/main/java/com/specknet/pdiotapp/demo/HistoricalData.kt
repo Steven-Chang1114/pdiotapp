@@ -2,24 +2,15 @@ package com.specknet.pdiotapp.demo
 
 import android.annotation.SuppressLint
 import android.content.Intent
-import android.graphics.Bitmap
 import android.graphics.Color
-import android.graphics.drawable.BitmapDrawable
-import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
-import android.widget.Button
-import android.widget.ImageView
-import android.widget.Spinner
-import android.widget.TextView
-import android.widget.Toast
+import android.view.ViewGroup
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import com.github.mikephil.charting.animation.Easing
 import com.github.mikephil.charting.charts.PieChart
-import com.github.mikephil.charting.components.Legend
 import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
@@ -219,7 +210,21 @@ class HistoricalData : AppCompatActivity() {
         bothBtn = findViewById(R.id.both_btn)
         dateSelector = findViewById(R.id.spinner1)
 
-        adapterArray = ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, datesSelectable)
+        adapterArray = ArrayAdapter<String>(this, R.layout.spinner_item, datesSelectable)
+
+//        adapterArray = object : ArrayAdapter<String>(
+//            this,
+//            R.layout.spinner_item, datesSelectable
+//        ) {
+//            override fun getDropDownView(position: Int, convertView: View, parent: ViewGroup): View {
+//                var v: View? = null
+//                v = super.getDropDownView(position, null, parent)
+//                // If this is the selected item position
+//                v.setBackgroundColor(Color.parseColor("#112758"))
+//                return v
+//            }
+//        }
+
         dateSelector.adapter = adapterArray
 
         val username = intent.getStringExtra("name")
