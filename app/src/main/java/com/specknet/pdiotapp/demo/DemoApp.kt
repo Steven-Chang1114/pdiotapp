@@ -26,6 +26,7 @@ import com.google.firebase.ktx.Firebase
 import com.google.gson.Gson
 import com.specknet.pdiotapp.R
 import com.specknet.pdiotapp.ml.RespeckModel
+import com.specknet.pdiotapp.ml.ThingyModel
 import com.specknet.pdiotapp.utils.Constants
 import com.specknet.pdiotapp.utils.RESpeckLiveData
 import com.specknet.pdiotapp.utils.ThingyLiveData
@@ -40,16 +41,12 @@ import java.time.format.DateTimeFormatter
 class DemoApp : AppCompatActivity() {
 
     // global graph variables
-    lateinit var dataSet_res_accel_x: LineDataSet
-    lateinit var dataSet_res_accel_y: LineDataSet
-    lateinit var dataSet_res_accel_z: LineDataSet
-
     lateinit var respeckData : MutableList<List<Float>>
     lateinit var respeckBuffer: FloatBuffer
     lateinit var thingyData : MutableList<List<Float>>
 
     lateinit var respeckModel: RespeckModel
-    lateinit var thingyModel: RespeckModel
+    lateinit var thingyModel: ThingyModel
 
     lateinit var lastMovement: ActionEnum
     lateinit var tflite : Interpreter
@@ -68,12 +65,10 @@ class DemoApp : AppCompatActivity() {
     var isThingyActive = false
     var isCloudActive = true
 
-    lateinit var classifiedMovement: ActionEnum
     private lateinit var classifiedMovementField : TextView
 
-    var respeckCounter = 0
+    var respeckCloudCounter = 0
     var thingyCounter = 0
-    lateinit var allRespeckData: LineData
 
     // global broadcast receiver so we can unregister it
     lateinit var respeckLiveUpdateReceiver: BroadcastReceiver
@@ -104,7 +99,6 @@ class DemoApp : AppCompatActivity() {
     private fun updatePage(action: ActionEnum) {
         runOnUiThread {
             // Stuff that updates the UI
-            saveData(action.movement)
             classifiedMovementField.text = action.movement
             actionImage.setBackgroundResource(getImageFile(action))
         }
@@ -153,7 +147,7 @@ class DemoApp : AppCompatActivity() {
                         }
 
                         // get all relevant intent contents
-                        val timestamp = System.currentTimeMillis()/1000.toFloat();
+                        val timestamp = liveData.phoneTimestamp.toFloat()
 
                         val accelX = liveData.accelX
                         val accelY = liveData.accelY
@@ -214,13 +208,13 @@ class DemoApp : AppCompatActivity() {
                     Log.d("Respeck_demo_Live", "onReceive: liveData = " + liveData)
 
                     if (isRespeckActive) {
-                        if (respeckCounter == 0) {
+                        if (respeckCloudCounter == 0) {
                             Toast.makeText(baseContext, "Respeck is running",
                                 Toast.LENGTH_SHORT).show()
                         }
 
                         // get all relevant intent contents
-                        val timestamp = System.currentTimeMillis()/1000.toFloat();
+                        val timestamp = liveData.phoneTimestamp.toFloat()
 
                         val accelX = liveData.accelX
                         val accelY = liveData.accelY
@@ -231,6 +225,7 @@ class DemoApp : AppCompatActivity() {
                         val gyroZ = liveData.gyro.z
 
                         val resultArr = listOf(timestamp, accelX, accelY, accelZ, gyroX, gyroY, gyroZ)
+//                        respeckBuffer.put(floatArrayOf(accelX, accelY, accelZ, gyroX, gyroY, gyroZ))
 
                         respeckData.add(resultArr)
                         while (respeckData.size > 50) {
@@ -241,13 +236,11 @@ class DemoApp : AppCompatActivity() {
                             if (isCloudActive) {
                                 classifiedMovementOnCloud()
                             } else {
-//                                respeckBuffer.add(floatArrayOf(accelX, accelY, accelZ, gyroX, gyroY, gyroZ))
-                                respeckBuffer.put(floatArrayOf(accelX, accelY, accelZ, gyroX, gyroY, gyroZ))
-                                classifiedMovementRecpeckLocal(respeckBuffer)
+                                classifiedMovementLocal(respeckBuffer)
                             }
                         }
 
-                        respeckCounter += 1
+                        respeckCloudCounter += 1
                     }
 
                 }
@@ -264,13 +257,13 @@ class DemoApp : AppCompatActivity() {
 
 
     @RequiresApi(Build.VERSION_CODES.O)
-    private fun classifiedMovementRecpeckLocal(floatArrayBuffer: FloatBuffer) {
+    private fun classifiedMovementLocal(respeckBuffer: FloatBuffer) {
         if (isRespeckActive) {
-            val inputArray = floatArrayBuffer.array().sliceArray(IntRange(0, 299))
+            val inputArray = respeckBuffer.array().sliceArray(IntRange(0, 299))
             val inputFeature0 = TensorBuffer.createFixedSize(intArrayOf(1, 50, 6), DataType.FLOAT32)
             inputFeature0.loadArray(inputArray)
 
-            floatArrayBuffer.clear()
+            respeckBuffer.clear()
 
             val output = respeckModel.process(inputFeature0).outputFeature0AsTensorBuffer.floatArray
 //            output.indexOf(output.max()!!)
@@ -297,18 +290,24 @@ class DemoApp : AppCompatActivity() {
         if (isRespeckActive && isThingyActive) {
             if (respeckData.size >= 50 && thingyData.size >= 50) {
                 sendDataToAzure("both", thingyList, respeckList, "PDIOT_DEMO_RESULT_BOTH_CLOUD", "PDIOT_DEMO_RESULT_BOTH_ERR")
-                respeckData = mutableListOf()
-                thingyData = mutableListOf()
+                for (i in 1..25) {
+                    respeckData.removeAt(0)
+                    thingyData.removeAt(0)
+                }
             }
         } else if (isRespeckActive) {
             if (respeckData.size >= 50) {
                 sendDataToAzure("respeck", thingyList, respeckList, "PDIOT_DEMO_RESULT_RES_CLOUD", "PDIOT_DEMO_RESULT_RES_ERROR")
-                respeckData = mutableListOf()
+                for (i in 1..25) {
+                    respeckData.removeAt(0)
+                }
             }
         } else if (isThingyActive) {
             if (thingyData.size >= 50) {
                 sendDataToAzure("thingy", thingyList, respeckList, "PDIOT_DEMO_RESULT_THINGY_CLOUD", "PDIOT_DEMO_RESULT_THINGY_ERROR")
-                thingyData = mutableListOf()
+                for (i in 1..25) {
+                    thingyData.removeAt(0)
+                }
             }
         }
     }
@@ -331,6 +330,7 @@ class DemoApp : AppCompatActivity() {
         result.success { f -> movementId = f.toInt()
             Log.d(successTag, selectMovements(movementId).movement)
             lastMovement = selectMovements(movementId)
+            saveData(lastMovement.movement, values.toString())
             updatePage(lastMovement)
         }
 
@@ -347,7 +347,7 @@ class DemoApp : AppCompatActivity() {
                 respeckActiveBtn.setBackgroundResource(R.drawable.hardware_button_active)
             }
 
-            respeckCounter = 0
+            respeckCloudCounter = 0
             respeckData = mutableListOf<List<Float>>()
         }
 
@@ -409,19 +409,19 @@ class DemoApp : AppCompatActivity() {
     private fun selectMovements(idx: Int) : ActionEnum {
         return when (idx) {
             0 -> ActionEnum.DESK_WORK
-            1 -> ActionEnum.WALKING_AT_NORMAL_SPEED
-            2 -> ActionEnum.STANDING
-            3 -> ActionEnum.SITTING_BENT_FORWARD
+            1 -> ActionEnum.WALKING_AT_NORMAL_SPEED // Thingy
+            2 -> ActionEnum.ASCENDING_STAIRS // Thingy
+            3 -> ActionEnum.DESCENDING_STAIRS // Thingy
             4 -> ActionEnum.SITTING_STRAIGHT
-            5 -> ActionEnum.SITTING_BENT_BACKWARD
-            6 -> ActionEnum.LYING_DOWN_ON_THE_RIGHT_SIDE
-            7 -> ActionEnum.LYING_DOWN_ON_THE_LEFT_SIDE
-            8 -> ActionEnum.LYING_DOWN_ON_THE_BACK
-            9 -> ActionEnum.LYING_DOWN_ON_STOMACH
-            10 -> ActionEnum.GENERAL_MOVEMENT
-            11 -> ActionEnum.RUNNING
-            12 -> ActionEnum.ASCENDING_STAIRS
-            13 -> ActionEnum.DESCENDING_STAIRS
+            5 -> ActionEnum.SITTING_BENT_FORWARD
+            6 -> ActionEnum.SITTING_BENT_BACKWARD
+            7 -> ActionEnum.STANDING
+            8 -> ActionEnum.RUNNING // Thingy
+            9 -> ActionEnum.LYING_DOWN_ON_THE_LEFT_SIDE
+            10 -> ActionEnum.LYING_DOWN_ON_THE_RIGHT_SIDE
+            11 -> ActionEnum.LYING_DOWN_ON_THE_BACK
+            12 -> ActionEnum.LYING_DOWN_ON_STOMACH
+            13 -> ActionEnum.GENERAL_MOVEMENT
             else -> ActionEnum.GENERAL_MOVEMENT
         }
     }
@@ -429,7 +429,7 @@ class DemoApp : AppCompatActivity() {
     private fun setupPage() {
         lastMovement = ActionEnum.GENERAL_MOVEMENT
         respeckModel = RespeckModel.newInstance(this)
-//        thingyModel = Model.newInstance(this)
+        thingyModel = ThingyModel.newInstance(this)
 
         db = Firebase.firestore
 
@@ -453,21 +453,8 @@ class DemoApp : AppCompatActivity() {
         actionImage.setBackgroundResource(R.drawable.general_movement)
     }
 
-    private fun readData() {
-        db.collection(userId)
-            .get()
-            .addOnSuccessListener { result ->
-                for (document in result) {
-                    Log.d("PDIOT_DB", "${document.id} => ${document.data}")
-                }
-            }
-            .addOnFailureListener { exception ->
-                Log.w("PDIOT_DB", "Error getting documents.", exception)
-            }
-    }
-
     @RequiresApi(Build.VERSION_CODES.O)
-    private fun saveData(data: String) {
+    private fun saveData(movement: String, data: String) {
         val curTimestamp = DateTimeFormatter
             .ofPattern("yyyy-MM-dd HH:mm:ss.SSSSSS")
             .withZone(ZoneOffset.UTC)
@@ -476,7 +463,8 @@ class DemoApp : AppCompatActivity() {
         // Add a new document with a generated ID
         db.collection(userId)
             .add(hashMapOf(
-                curTimestamp to data
+                curTimestamp to movement,
+                movement to data
             ))
             .addOnSuccessListener { documentReference ->
                 Log.d("PDIOT_DB", "DocumentSnapshot added with ID: ${documentReference.id}")
@@ -509,7 +497,7 @@ class DemoApp : AppCompatActivity() {
         thingyData = mutableListOf()
 
         respeckModel.close()
-//        thingyModel.close()
+        thingyModel.close()
 
         looperRespeck.quit()
         looperThingy.quit()
