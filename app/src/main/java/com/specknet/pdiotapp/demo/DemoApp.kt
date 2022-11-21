@@ -26,7 +26,9 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.gson.Gson
+import com.specknet.pdiotapp.HomePage
 import com.specknet.pdiotapp.R
+import com.specknet.pdiotapp.SignUp
 import com.specknet.pdiotapp.ml.RespeckModel
 import com.specknet.pdiotapp.ml.ThingyModel
 import com.specknet.pdiotapp.utils.Constants
@@ -61,6 +63,7 @@ class DemoApp : AppCompatActivity() {
     lateinit var thingyActiveBtn: Button
     lateinit var cloudActiveBtn: Button
     lateinit var localActiveBtn: Button
+    lateinit var backBtn: ImageView
     lateinit var actionImage: ImageView
     lateinit var respeckStatus: TextView
     lateinit var thingyStatus: TextView
@@ -352,6 +355,25 @@ class DemoApp : AppCompatActivity() {
     }
 
     private fun setupClickListeners() {
+        backBtn.setOnClickListener {
+            this.finish()
+
+            val intent = Intent(this, HomePage::class.java)
+
+            val auth = Firebase.auth
+            val firebaseAccount = auth.currentUser
+            val googleAuthAccount = GoogleSignIn.getLastSignedInAccount(this)
+
+            if (googleAuthAccount != null) {
+                intent.putExtra("name" , googleAuthAccount.displayName)
+            } else if (firebaseAccount != null) {
+                intent.putExtra("name" , firebaseAccount.displayName)
+            }
+
+            startActivity(intent)
+            overridePendingTransition(R.anim.right_to_left, R.anim.left_to_right);
+        }
+
         respeckActiveBtn.setOnClickListener {
             if (isRespeckActive) {
                 isRespeckActive = false
@@ -474,6 +496,7 @@ class DemoApp : AppCompatActivity() {
         localActiveBtn = findViewById(R.id.local_button)
         classifiedMovementField = findViewById(R.id.movement)
         actionImage = findViewById(R.id.movement_img)
+        backBtn = findViewById(R.id.back_btn)
         title = findViewById(R.id.user)
 
         getUserId()
