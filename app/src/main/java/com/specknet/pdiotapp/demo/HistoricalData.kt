@@ -8,9 +8,14 @@ import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.util.Log
+import android.view.View
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.ImageView
+import android.widget.Spinner
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.github.mikephil.charting.animation.Easing
 import com.github.mikephil.charting.charts.PieChart
@@ -37,14 +42,19 @@ class HistoricalData : AppCompatActivity() {
     lateinit var respeckBtn: Button
     lateinit var thingyBtn: Button
     lateinit var bothBtn: Button
+    lateinit var chart: PieChart
+    lateinit var dateSelector: Spinner
 
     lateinit var curType: String
     lateinit var userId : String
-    lateinit var chart: PieChart
+    lateinit var adapterArray : ArrayAdapter<String>
 
     var isThingySelected = false
     var isRespeckSelected = false
     var isBothSelected = false
+    val datesSelectable = listOf("Past 5 minutes", "Past 10 minutes", "Past 30 minutes",
+        "Past 1 hour", "Past 3 hours", "Past 6 hours", "Past 12 hours", "Past 24 hours",
+        "Past 7 days")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -163,6 +173,21 @@ class HistoricalData : AppCompatActivity() {
             }
         }
 
+        dateSelector.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+
+            }
+
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                val text = datesSelectable[position]
+
+                if (parent != null) {
+                    Toast.makeText(applicationContext, text, Toast.LENGTH_SHORT).show()
+                }
+            }
+
+        }
+
         backBtn.setOnClickListener {
             this.finish()
 
@@ -192,6 +217,10 @@ class HistoricalData : AppCompatActivity() {
         respeckBtn = findViewById(R.id.respeck_btn)
         thingyBtn = findViewById(R.id.thingy_btn)
         bothBtn = findViewById(R.id.both_btn)
+        dateSelector = findViewById(R.id.spinner1)
+
+        adapterArray = ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, datesSelectable)
+        dateSelector.adapter = adapterArray
 
         val username = intent.getStringExtra("name")
         title.text = String.format("%s's\nHistorical Data:", username)
