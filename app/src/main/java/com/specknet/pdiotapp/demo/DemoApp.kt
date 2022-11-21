@@ -100,9 +100,11 @@ class DemoApp : AppCompatActivity() {
 
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun updatePage(action: ActionEnum) {
         runOnUiThread {
             // Stuff that updates the UI
+            saveData(action.movement)
             classifiedMovementField.text = action.movement
             actionImage.setBackgroundResource(getImageFile(action))
         }
@@ -261,6 +263,7 @@ class DemoApp : AppCompatActivity() {
     }
 
 
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun classifiedMovementRecpeckLocal(floatArrayBuffer: FloatBuffer) {
         if (isRespeckActive) {
             val inputArray = floatArrayBuffer.array().sliceArray(IntRange(0, 299))
@@ -310,6 +313,7 @@ class DemoApp : AppCompatActivity() {
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun sendDataToAzure(type: String, thingyData: List<List<Float>>, respeckData : List<List<Float>>, successTag: String, errorTag: String) {
         val values = mapOf("type" to type, "thingy_json" to thingyData.toString(), "respeck_json" to respeckData.toString())
 
@@ -501,8 +505,8 @@ class DemoApp : AppCompatActivity() {
         unregisterReceiver(respeckLiveUpdateReceiver)
         unregisterReceiver(thingyLiveUpdateReceiver)
 
-        respeckData = mutableListOf<List<Float>>()
-        thingyData = mutableListOf<List<Float>>()
+        respeckData = mutableListOf()
+        thingyData = mutableListOf()
 
         respeckModel.close()
 //        thingyModel.close()
