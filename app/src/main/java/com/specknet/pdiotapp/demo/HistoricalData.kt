@@ -2,7 +2,10 @@ package com.specknet.pdiotapp.demo
 
 import android.annotation.SuppressLint
 import android.content.Intent
+import android.graphics.Bitmap
 import android.graphics.Color
+import android.graphics.drawable.BitmapDrawable
+import android.graphics.drawable.Drawable
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -89,12 +92,12 @@ class HistoricalData : AppCompatActivity() {
         chart.getDescription().setEnabled(false);
 
         chart.setDrawHoleEnabled(true);
-        chart.setHoleColor(Color.parseColor("#FEF5E6"));
+        chart.setHoleColor(Color.parseColor("#112758"));
 
         chart.setTransparentCircleColor(Color.parseColor("#FEF5E6"));
         chart.setTransparentCircleAlpha(110);
 
-        chart.setHoleRadius(40f);
+        chart.setHoleRadius(37f);
         chart.setTransparentCircleRadius(43f);
 
         chart.animateY(1400, Easing.EaseInOutQuad);
@@ -110,18 +113,6 @@ class HistoricalData : AppCompatActivity() {
         val values: ArrayList<PieEntry> = ArrayList()
 
         for ((movement, count) in movementMap) {
-            //            val icon = resources.getDrawable(R.drawable.desk_work)
-//            val bitmap = (icon as BitmapDrawable).bitmap
-//            val d: Drawable =
-//                BitmapDrawable(resources,
-//                    Bitmap.createScaledBitmap(
-//                        bitmap,
-//                        20,
-//                        20,
-//                        true
-//                    )
-//                )
-
             if (count > 0) {
                 values.add(
                     PieEntry(
