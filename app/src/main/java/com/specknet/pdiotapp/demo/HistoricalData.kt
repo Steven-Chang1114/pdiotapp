@@ -7,7 +7,6 @@ import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.view.ViewGroup
 import android.widget.*
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
@@ -26,7 +25,8 @@ import com.google.firebase.ktx.Firebase
 import com.specknet.pdiotapp.HomePage
 import com.specknet.pdiotapp.R
 import java.time.Instant
-import java.util.Date
+import java.time.LocalDateTime
+import java.time.ZoneId
 
 
 class HistoricalData : AppCompatActivity() {
@@ -49,11 +49,28 @@ class HistoricalData : AppCompatActivity() {
     var isThingySelected = false
     var isRespeckSelected = false
     var isBothSelected = false
-    var historicalData = mapOf<String, HistoricalDataModel>()
+    var historicalDataMap = mutableMapOf<Instant, HistoricalDataModel>()
     val datesSelectable = listOf("Past 5 minutes", "Past 10 minutes", "Past 30 minutes",
         "Past 1 hour", "Past 3 hours", "Past 6 hours", "Past 12 hours", "Past 24 hours",
         "Past 7 days")
+    var movementMap = hashMapOf(
+        ActionEnum.DESK_WORK.movement to 0,
+        ActionEnum.WALKING_AT_NORMAL_SPEED.movement to 0,
+        ActionEnum.STANDING.movement to 0,
+        ActionEnum.SITTING_BENT_FORWARD.movement to 0,
+        ActionEnum.SITTING_STRAIGHT.movement to 0,
+        ActionEnum.SITTING_BENT_BACKWARD.movement to 0,
+        ActionEnum.LYING_DOWN_ON_THE_RIGHT_SIDE.movement to 0,
+        ActionEnum.LYING_DOWN_ON_THE_LEFT_SIDE.movement to 0,
+        ActionEnum.LYING_DOWN_ON_THE_BACK.movement to 0,
+        ActionEnum.LYING_DOWN_ON_STOMACH.movement to 0,
+        ActionEnum.GENERAL_MOVEMENT.movement to 0,
+        ActionEnum.RUNNING.movement to 0,
+        ActionEnum.ASCENDING_STAIRS.movement to 0,
+        ActionEnum.DESCENDING_STAIRS.movement to 0
+    )
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.historical_data)
@@ -85,14 +102,15 @@ class HistoricalData : AppCompatActivity() {
         chart.legend.isEnabled = false
         chart.setEntryLabelTextSize(8f)
 
-        setData(7, 100);
+        setData()
     }
 
     @SuppressLint("UseCompatLoadingForDrawables")
-    private fun setData(count: Int, range: Int) {
+    private fun setData() {
         val values: ArrayList<PieEntry> = ArrayList()
-        for (i in 0 until count) {
-//            val icon = resources.getDrawable(R.drawable.desk_work)
+
+        for ((movement, count) in movementMap) {
+            //            val icon = resources.getDrawable(R.drawable.desk_work)
 //            val bitmap = (icon as BitmapDrawable).bitmap
 //            val d: Drawable =
 //                BitmapDrawable(resources,
@@ -104,12 +122,14 @@ class HistoricalData : AppCompatActivity() {
 //                    )
 //                )
 
-            values.add(
-                PieEntry(
-                    (Math.random() * range + range / 5).toFloat(),
-                    "AHDWHDWH"
+            if (count > 0) {
+                values.add(
+                    PieEntry(
+                        count.toFloat(),
+                        movement
+                    )
                 )
-            )
+            }
         }
 
         val dataSet = PieDataSet(values, "Historical Movements")
@@ -124,6 +144,7 @@ class HistoricalData : AppCompatActivity() {
         data.setValueTextSize(11f)
         data.setValueTextColor(Color.parseColor("#FEF5E6"))
         chart.data = data
+        chart.animateY(1400, Easing.EaseInOutQuad);
 
         // undo all highlights
         chart.highlightValues(null);
@@ -145,7 +166,6 @@ class HistoricalData : AppCompatActivity() {
                 respeckBtn.setBackgroundResource(R.drawable.hardware_button_active)
             }
 
-            historicalData = mapOf<String, HistoricalDataModel>()
             updateData()
         }
 
@@ -161,7 +181,6 @@ class HistoricalData : AppCompatActivity() {
                 thingyBtn.setBackgroundResource(R.drawable.hardware_button_active)
             }
 
-            historicalData = mapOf<String, HistoricalDataModel>()
             updateData()
         }
 
@@ -177,7 +196,6 @@ class HistoricalData : AppCompatActivity() {
                 bothBtn.setBackgroundResource(R.drawable.hardware_button_active)
             }
 
-            historicalData = mapOf<String, HistoricalDataModel>()
             updateData()
         }
 
@@ -207,7 +225,6 @@ class HistoricalData : AppCompatActivity() {
 
             @RequiresApi(Build.VERSION_CODES.O)
             override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
-                historicalData = mapOf<String, HistoricalDataModel>()
 
                 val text = datesSelectable[position]
                 timePeriod = text
@@ -225,6 +242,9 @@ class HistoricalData : AppCompatActivity() {
         endDate = Instant.now()
         startDate = getStartDate()
 
+        historicalDataMap = mutableMapOf()
+        resetMovementMap()
+
         readData()
     }
 
@@ -232,7 +252,7 @@ class HistoricalData : AppCompatActivity() {
     @RequiresApi(Build.VERSION_CODES.O)
     private fun getStartDate() : Instant {
         return when(timePeriod) {
-            "Past 5 minutes", -> endDate.minusSeconds(5*60)
+            "Past 5 minutes" -> endDate.minusSeconds(5 * 60)
             "Past 10 minutes" -> endDate.minusSeconds(10*60)
             "Past 30 minutes" -> endDate.minusSeconds(30*60)
             "Past 1 hour" -> endDate.minusSeconds(1*60*60)
@@ -260,7 +280,6 @@ class HistoricalData : AppCompatActivity() {
         adapterArray = ArrayAdapter<String>(this, R.layout.spinner_item, datesSelectable)
         dateSelector.adapter = adapterArray
 
-        historicalData = mapOf<String, HistoricalDataModel>()
         timePeriod = "Past 5 minutes"
         updateData()
 
@@ -268,22 +287,43 @@ class HistoricalData : AppCompatActivity() {
         title.text = String.format("%s's\nHistorical Data:", username)
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun readData() {
         db.collection(userId)
             .get()
             .addOnSuccessListener { result ->
                 for (document in result) {
-//                    val data = HistoricalDataModel(
-//                        document.id,
-//                        document.data["type"] as String,
-//                        document.data["movement"] as String,
-//                        document.data["time"],
-//                    )
+
                     val type = document.data["type"]
                     if (type == getCurType()) {
-                        Log.d("PDIOT_DB", "${document.id} => ${document.data}")
+                        val rawTime = document.data["time"] as String
+                        val curTimeArr = rawTime.split(" ")
+                        val curDate = curTimeArr[0]
+                        val curTime = curTimeArr[1]
+                        val curDateTime: String = curDate + "T" + curTime
+
+                        val ldt: LocalDateTime = LocalDateTime.parse(curDateTime)
+                        val curInstant = ldt.atZone(ZoneId.systemDefault()).toInstant()
+
+                        if (startDate.toEpochMilli().compareTo(curInstant.toEpochMilli()) <= 0) {
+//                            Log.d("PDIOT_DB", "${startDate} => ${instant}")
+                            val movement = document.data["movement"] as String
+                            val data = HistoricalDataModel(
+                                document.id,
+                                type as String,
+                                document.data["movement"] as String,
+                                curInstant as Instant,
+                            )
+
+                            movementMap[movement]?.let { movementMap.put(movement, it.plus(1)) }
+                            historicalDataMap.put(curInstant, data)
+                        }
                     }
                 }
+
+                Log.d("PDIOT_DB", "READ_RESULT_HIS => ${historicalDataMap.size}")
+                Log.d("PDIOT_DB", "READ_RESULT_MOV => ${movementMap}")
+                setData()
             }
             .addOnFailureListener { exception ->
                 Log.w("PDIOT_DB", "Error getting documents.", exception)
@@ -301,6 +341,25 @@ class HistoricalData : AppCompatActivity() {
         } else {
             return "none"
         }
+    }
+
+    private fun resetMovementMap() {
+        movementMap = hashMapOf(
+            ActionEnum.DESK_WORK.movement to 0,
+            ActionEnum.WALKING_AT_NORMAL_SPEED.movement to 0,
+            ActionEnum.STANDING.movement to 0,
+            ActionEnum.SITTING_BENT_FORWARD.movement to 0,
+            ActionEnum.SITTING_STRAIGHT.movement to 0,
+            ActionEnum.SITTING_BENT_BACKWARD.movement to 0,
+            ActionEnum.LYING_DOWN_ON_THE_RIGHT_SIDE.movement to 0,
+            ActionEnum.LYING_DOWN_ON_THE_LEFT_SIDE.movement to 0,
+            ActionEnum.LYING_DOWN_ON_THE_BACK.movement to 0,
+            ActionEnum.LYING_DOWN_ON_STOMACH.movement to 0,
+            ActionEnum.GENERAL_MOVEMENT.movement to 0,
+            ActionEnum.RUNNING.movement to 0,
+            ActionEnum.ASCENDING_STAIRS.movement to 0,
+            ActionEnum.DESCENDING_STAIRS.movement to 0
+        )
     }
 
     private fun getUserId() {
