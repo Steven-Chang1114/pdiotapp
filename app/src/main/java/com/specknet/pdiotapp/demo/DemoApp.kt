@@ -1,9 +1,11 @@
 package com.specknet.pdiotapp.demo
 
+import android.annotation.SuppressLint
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.graphics.Color
 import android.os.*
 import android.util.Log
 import android.widget.Button
@@ -33,6 +35,7 @@ import com.specknet.pdiotapp.utils.ThingyLiveData
 import org.tensorflow.lite.DataType
 import org.tensorflow.lite.Interpreter
 import org.tensorflow.lite.support.tensorbuffer.TensorBuffer
+import org.w3c.dom.Text
 import java.nio.FloatBuffer
 import java.time.Instant
 import java.time.ZoneOffset
@@ -59,9 +62,11 @@ class DemoApp : AppCompatActivity() {
     lateinit var cloudActiveBtn: Button
     lateinit var localActiveBtn: Button
     lateinit var actionImage: ImageView
+    lateinit var respeckStatus: TextView
+    lateinit var thingyStatus: TextView
     lateinit var title: TextView
 
-    var isRespeckActive = true
+    var isRespeckActive = false
     var isThingyActive = false
     var isCloudActive = true
 
@@ -142,8 +147,8 @@ class DemoApp : AppCompatActivity() {
 
                     if (isThingyActive) {
                         if (thingyCounter == 0) {
-                            Toast.makeText(baseContext, "Thingy is running",
-                                Toast.LENGTH_SHORT).show()
+                            thingyStatus.text = "Thingy Status:\nStreaming"
+                            thingyStatus.setTextColor(Color.parseColor("#379237"))
                         }
 
                         // get all relevant intent contents
@@ -209,8 +214,8 @@ class DemoApp : AppCompatActivity() {
 
                     if (isRespeckActive) {
                         if (respeckCloudCounter == 0) {
-                            Toast.makeText(baseContext, "Respeck is running",
-                                Toast.LENGTH_SHORT).show()
+                            respeckStatus.text = "Respeck Status:\nStreaming"
+                            respeckStatus.setTextColor(Color.parseColor("#379237"))
                         }
 
                         // get all relevant intent contents
@@ -291,22 +296,31 @@ class DemoApp : AppCompatActivity() {
             if (respeckData.size >= 50 && thingyData.size >= 50) {
                 sendDataToAzure("both", thingyList, respeckList, "PDIOT_DEMO_RESULT_BOTH_CLOUD", "PDIOT_DEMO_RESULT_BOTH_ERR")
                 for (i in 1..25) {
-                    respeckData.removeAt(0)
-                    thingyData.removeAt(0)
+                    if (respeckData.size > 25) {
+                        respeckData.removeAt(0)
+                    }
+
+                    if (thingyData.size > 25) {
+                        thingyData.removeAt(0)
+                    }
                 }
             }
         } else if (isRespeckActive) {
             if (respeckData.size >= 50) {
                 sendDataToAzure("respeck", thingyList, respeckList, "PDIOT_DEMO_RESULT_RES_CLOUD", "PDIOT_DEMO_RESULT_RES_ERROR")
                 for (i in 1..25) {
-                    respeckData.removeAt(0)
+                    if (respeckData.size > 25) {
+                        respeckData.removeAt(0)
+                    }
                 }
             }
         } else if (isThingyActive) {
             if (thingyData.size >= 50) {
                 sendDataToAzure("thingy", thingyList, respeckList, "PDIOT_DEMO_RESULT_THINGY_CLOUD", "PDIOT_DEMO_RESULT_THINGY_ERROR")
                 for (i in 1..25) {
-                    thingyData.removeAt(0)
+                    if (thingyData.size > 25) {
+                        thingyData.removeAt(0)
+                    }
                 }
             }
         }
@@ -341,22 +355,38 @@ class DemoApp : AppCompatActivity() {
         respeckActiveBtn.setOnClickListener {
             if (isRespeckActive) {
                 isRespeckActive = false
+
+                respeckStatus.text = "Respeck Status:\nDiabled"
+                respeckStatus.setTextColor(Color.parseColor("#EB6440"))
+
                 respeckActiveBtn.setBackgroundResource(R.drawable.hardware_button_inactive)
             } else {
                 isRespeckActive = true
+
+                respeckStatus.text = "Respeck Status:\nDisconnected"
+                respeckStatus.setTextColor(Color.parseColor("#FD841F"))
+
                 respeckActiveBtn.setBackgroundResource(R.drawable.hardware_button_active)
             }
 
             respeckCloudCounter = 0
-            respeckData = mutableListOf<List<Float>>()
+            respeckData = mutableListOf()
         }
 
         thingyActiveBtn.setOnClickListener {
             if (isThingyActive) {
                 isThingyActive = false
+
+                thingyStatus.text = "Thingy Status:\nDiabled"
+                thingyStatus.setTextColor(Color.parseColor("#EB6440"))
+
                 thingyActiveBtn.setBackgroundResource(R.drawable.hardware_button_inactive)
             } else {
                 isThingyActive = true
+
+                thingyStatus.text = "Thingy Status:\nDisconnected"
+                thingyStatus.setTextColor(Color.parseColor("#FD841F"))
+
                 thingyActiveBtn.setBackgroundResource(R.drawable.hardware_button_active)
             }
 
@@ -436,6 +466,8 @@ class DemoApp : AppCompatActivity() {
         respeckData = mutableListOf()
         thingyData = mutableListOf()
 
+        respeckStatus = findViewById(R.id.respeck_status)
+        thingyStatus = findViewById(R.id.thingy_status)
         respeckActiveBtn = findViewById(R.id.respeck_button)
         thingyActiveBtn = findViewById(R.id.thingy_button)
         cloudActiveBtn = findViewById(R.id.azure_button)
