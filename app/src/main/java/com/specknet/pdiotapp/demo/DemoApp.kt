@@ -481,8 +481,7 @@ class DemoApp : AppCompatActivity() {
         val username = intent.getStringExtra("name")
         title.text = String.format("%s's\ncurrent action:", username)
 
-        classifiedMovementField.text = ActionEnum.LYING_DOWN_ON_THE_RIGHT_SIDE.movement
-        actionImage.setBackgroundResource(R.drawable.general_movement)
+        classifiedMovementField.text = ""
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
