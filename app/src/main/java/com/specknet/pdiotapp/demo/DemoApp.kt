@@ -236,7 +236,7 @@ class DemoApp : AppCompatActivity() {
                             if (isCloudActive) {
                                 classifiedMovementOnCloud()
                             } else {
-                                classifiedMovementLocal(respeckBuffer)
+//                                classifiedMovementLocal(respeckBuffer)
                             }
                         }
 
@@ -330,7 +330,7 @@ class DemoApp : AppCompatActivity() {
         result.success { f -> movementId = f.toInt()
             Log.d(successTag, selectMovements(movementId).movement)
             lastMovement = selectMovements(movementId)
-            saveData(lastMovement.movement, values.toString())
+            saveData(type, lastMovement.movement, values.toString())
             updatePage(lastMovement)
         }
 
@@ -454,7 +454,7 @@ class DemoApp : AppCompatActivity() {
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    private fun saveData(movement: String, data: String) {
+    private fun saveData(type: String, movement: String, data: String) {
         val curTimestamp = DateTimeFormatter
             .ofPattern("yyyy-MM-dd HH:mm:ss.SSSSSS")
             .withZone(ZoneOffset.UTC)
@@ -463,6 +463,7 @@ class DemoApp : AppCompatActivity() {
         // Add a new document with a generated ID
         db.collection(userId)
             .add(hashMapOf(
+                "type" to type,
                 curTimestamp to movement,
                 movement to data
             ))
