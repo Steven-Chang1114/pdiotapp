@@ -144,14 +144,14 @@
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
                     <androidx.constraintlayout.widget.ConstraintLayout
-                        android:id="@+id/record_button"
+                        android:id="@+id/ble_button"
                         android:layout_width="120dp"
                         android:layout_height="200dp"
-                        android:layout_marginStart="30dp"
+                        android:layout_marginLeft="20dp"
                         android:background="@drawable/demo_button">
 
                         <ImageView
-                            android:id="@+id/imageView6"
+                            android:id="@+id/imageView9"
                             android:layout_width="200dp"
                             android:layout_height="200dp"
                             android:layout_marginStart="125dp"
@@ -164,7 +164,7 @@
                             />
 
                         <ImageView
-                            android:id="@+id/imageView5"
+                            android:id="@+id/imageView10"
                             android:layout_width="200dp"
                             android:layout_height="200dp"
                             android:layout_marginEnd="200dp"
@@ -177,22 +177,22 @@
                             />
 
                         <ImageView
-                            android:id="@+id/record_view"
+                            android:id="@+id/ble_view"
                             android:layout_width="220dp"
                             android:layout_height="220dp"
-                            android:layout_marginTop="23dp"
-                            android:layout_marginEnd="40dp"
-                            android:src="@drawable/record_data"
+                            android:layout_marginTop="50dp"
+                            android:layout_marginEnd="50dp"
+                            android:src="@drawable/pairing"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent" />
 
                         <TextView
-                            android:id="@+id/record_title"
+                            android:id="@+id/ble_title"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="35dp"
+                            android:layout_marginStart="20dp"
                             android:layout_marginBottom="60dp"
                             android:fontFamily="sans-serif-medium"
                             android:lineSpacingExtra="10sp"
@@ -200,7 +200,7 @@
                             android:shadowDx="1"
                             android:shadowDy="1"
                             android:shadowRadius="1"
-                            android:text="@string/record_ndata"
+                            android:text="@string/connect_nsensor"
                             android:textAlignment="textEnd"
                             android:textColor="#FEF5E6"
                             android:textSize="20sp"
@@ -211,14 +211,13 @@
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent" />
 
-
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:id="@+id/live_button"
                         android:layout_width="120dp"
                         android:layout_height="200dp"
-                        android:layout_marginStart="30dp"
+                        android:layout_marginStart="20dp"
                         android:background="@drawable/demo_button">
 
                         <ImageView
@@ -286,15 +285,15 @@
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
                     <androidx.constraintlayout.widget.ConstraintLayout
-                        android:id="@+id/ble_button"
+                        android:id="@+id/record_button"
                         android:layout_width="120dp"
                         android:layout_height="200dp"
-                        android:layout_marginLeft="30dp"
-                        android:layout_marginRight="30dp"
+                        android:layout_marginStart="20dp"
+                        android:layout_marginEnd="30dp"
                         android:background="@drawable/demo_button">
 
                         <ImageView
-                            android:id="@+id/imageView9"
+                            android:id="@+id/imageView6"
                             android:layout_width="200dp"
                             android:layout_height="200dp"
                             android:layout_marginStart="125dp"
@@ -307,7 +306,7 @@
                             />
 
                         <ImageView
-                            android:id="@+id/imageView10"
+                            android:id="@+id/imageView5"
                             android:layout_width="200dp"
                             android:layout_height="200dp"
                             android:layout_marginEnd="200dp"
@@ -320,22 +319,22 @@
                             />
 
                         <ImageView
-                            android:id="@+id/ble_view"
+                            android:id="@+id/record_view"
                             android:layout_width="220dp"
                             android:layout_height="220dp"
-                            android:layout_marginTop="50dp"
-                            android:layout_marginEnd="50dp"
-                            android:src="@drawable/pairing"
+                            android:layout_marginTop="23dp"
+                            android:layout_marginEnd="40dp"
+                            android:src="@drawable/record_data"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent" />
 
                         <TextView
-                            android:id="@+id/ble_title"
+                            android:id="@+id/record_title"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="20dp"
+                            android:layout_marginStart="35dp"
                             android:layout_marginBottom="60dp"
                             android:fontFamily="sans-serif-medium"
                             android:lineSpacingExtra="10sp"
@@ -343,7 +342,7 @@
                             android:shadowDx="1"
                             android:shadowDy="1"
                             android:shadowRadius="1"
-                            android:text="@string/connect_nsensor"
+                            android:text="@string/record_ndata"
                             android:textAlignment="textEnd"
                             android:textColor="#FEF5E6"
                             android:textSize="20sp"
@@ -353,6 +352,7 @@
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent" />
+
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
