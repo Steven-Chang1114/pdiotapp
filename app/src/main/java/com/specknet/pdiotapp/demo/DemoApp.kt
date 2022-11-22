@@ -305,12 +305,13 @@ class DemoApp : AppCompatActivity() {
                     }
                 }
             } else {
-                actionImage.setBackgroundResource(R.drawable.ic_baseline_error_24)
-                if (respeckData.size < 50) {
+                if (respeckStatus.text != "Respeck Status:\nStreaming") {
                     classifiedMovementField.text = "Respeck data is not ready yet"
+                    actionImage.setBackgroundResource(R.drawable.ic_baseline_error_24)
 
-                } else if  (thingyData.size < 50) {
+                } else if  (thingyStatus.text != "Thingy Status:\nStreaming") {
                     classifiedMovementField.text = "Thingy data is not ready yet"
+                    actionImage.setBackgroundResource(R.drawable.ic_baseline_error_24)
                 }
             }
         } else if (isRespeckActive) {
@@ -399,6 +400,9 @@ class DemoApp : AppCompatActivity() {
                 respeckStatus.text = "Respeck Status:\nDisconnected"
                 respeckStatus.setTextColor(Color.parseColor("#FD841F"))
 
+                actionImage.setBackgroundResource(R.drawable.ic_baseline_error_24)
+                classifiedMovementField.text = "Data is not streaming"
+
                 respeckActiveBtn.setBackgroundResource(R.drawable.hardware_button_active)
             }
 
@@ -419,6 +423,9 @@ class DemoApp : AppCompatActivity() {
 
                 thingyStatus.text = "Thingy Status:\nDisconnected"
                 thingyStatus.setTextColor(Color.parseColor("#FD841F"))
+
+                actionImage.setBackgroundResource(R.drawable.ic_baseline_error_24)
+                classifiedMovementField.text = "Data is not streaming"
 
                 thingyActiveBtn.setBackgroundResource(R.drawable.hardware_button_active)
             }
