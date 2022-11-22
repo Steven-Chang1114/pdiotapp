@@ -71,10 +71,13 @@ class DemoApp : AppCompatActivity() {
     lateinit var looperRespeck: Looper
     lateinit var looperThingy: Looper
     lateinit var thingyTimer: Instant
+    lateinit var thingyHandler: Handler
+    lateinit var thingyRunnable: Runnable
 
     val filterTestRespeck = IntentFilter(Constants.ACTION_RESPECK_LIVE_BROADCAST)
     val filterTestThingy = IntentFilter(Constants.ACTION_THINGY_BROADCAST)
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_demo)
@@ -91,23 +94,23 @@ class DemoApp : AppCompatActivity() {
 
         onThingyReceive()
 
-        val handler = Handler()
-        handler.postDelayed(object : Runnable {
-            @RequiresApi(Build.VERSION_CODES.O)
-            override fun run() {
-                //your code
-                Log.i("PDIOT_DEMO_THINGY_TIMER", "${Instant.now()} => ${thingyTimer.toString()} = ${Instant.now().toEpochMilli() - thingyTimer.toEpochMilli()}")
-                if (isThingyActive && Instant.now().toEpochMilli() - thingyTimer.toEpochMilli() > 2000) {
-                    Log.i("PDIOT_DEMO_THINGY_ERR", "Thingy disconnected")
-                    classifiedMovementField.text = "Thingy is disconnected"
-                    actionImage.setBackgroundResource(R.drawable.ic_baseline_error_24)
+        thingyHandler = Handler()
 
-                    thingyStatus.text = "Thingy Status:\nDisconnected"
-                    thingyStatus.setTextColor(Color.parseColor("#FD841F"))
-                }
-                handler.postDelayed(this, 1000)
+        thingyRunnable = Runnable {
+            //Do Something
+            Log.i("PDIOT_DEMO_THINGY_TIMER", "${Instant.now()} => ${thingyTimer.toString()} = ${Instant.now().toEpochMilli() - thingyTimer.toEpochMilli()}")
+            if (isThingyActive && Instant.now().toEpochMilli() - thingyTimer.toEpochMilli() > 2000) {
+                Log.i("PDIOT_DEMO_THINGY_ERR", "Thingy disconnected")
+                classifiedMovementField.text = "Thingy is disconnected"
+                actionImage.setBackgroundResource(R.drawable.ic_baseline_error_24)
+
+                thingyStatus.text = "Thingy Status:\nDisconnected"
+                thingyStatus.setTextColor(Color.parseColor("#FD841F"))
             }
-        }, 20000)
+            thingyHandler.postDelayed(thingyRunnable, 1000)
+        }
+
+        thingyHandler.postDelayed(thingyRunnable, 20000)
 
     }
 
@@ -588,6 +591,8 @@ class DemoApp : AppCompatActivity() {
 
         looperRespeck.quit()
         looperThingy.quit()
+
+        thingyHandler.removeCallbacks(thingyRunnable)
 
         super.onDestroy()
     }
