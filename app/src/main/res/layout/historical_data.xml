@@ -80,6 +80,20 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/upper_layout">
 
+        <TextView
+            android:id="@+id/loading_msg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Select following options"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            android:typeface="sans"
+            android:textColor="#170200"
+            app:layout_constraintBottom_toTopOf="@+id/spinner1"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
         <Spinner
             android:id="@+id/spinner1"
             android:layout_width="match_parent"
@@ -88,7 +102,7 @@
             android:layout_marginStart="30dp"
             android:layout_marginEnd="30dp"
             android:spinnerMode="dropdown"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/loading_msg"
             app:layout_constraintBottom_toTopOf="@+id/buttons"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
@@ -97,6 +111,7 @@
             android:id="@+id/buttons"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="70dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

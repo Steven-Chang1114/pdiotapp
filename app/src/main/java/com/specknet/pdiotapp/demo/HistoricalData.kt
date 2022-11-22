@@ -42,6 +42,7 @@ class HistoricalData : AppCompatActivity() {
     lateinit var bothBtn: Button
     lateinit var chart: PieChart
     lateinit var dateSelector: Spinner
+    lateinit var loadingMsg: TextView
 
     lateinit var userId : String
     lateinit var endDate: Instant
@@ -155,9 +156,9 @@ class HistoricalData : AppCompatActivity() {
 
                 isRespeckSelected = true
                 respeckBtn.setBackgroundResource(R.drawable.hardware_button_active)
-            }
 
-            updateData()
+                updateData()
+            }
         }
 
         thingyBtn.setOnClickListener {
@@ -170,9 +171,9 @@ class HistoricalData : AppCompatActivity() {
 
                 isThingySelected = true
                 thingyBtn.setBackgroundResource(R.drawable.hardware_button_active)
-            }
 
-            updateData()
+                updateData()
+            }
         }
 
         bothBtn.setOnClickListener {
@@ -185,9 +186,9 @@ class HistoricalData : AppCompatActivity() {
 
                 isBothSelected = true
                 bothBtn.setBackgroundResource(R.drawable.hardware_button_active)
-            }
 
-            updateData()
+                updateData()
+            }
         }
 
         backBtn.setOnClickListener {
@@ -222,7 +223,9 @@ class HistoricalData : AppCompatActivity() {
                 endDate = Instant.now()
                 startDate = getStartDate()
 
-                updateData()
+                if (isBothSelected || isRespeckSelected || isThingySelected) {
+                    updateData()
+                }
             }
 
         }
@@ -230,6 +233,7 @@ class HistoricalData : AppCompatActivity() {
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun updateData() {
+        loadingMsg.text = "Loading"
         endDate = Instant.now()
         startDate = getStartDate()
 
@@ -267,12 +271,12 @@ class HistoricalData : AppCompatActivity() {
         thingyBtn = findViewById(R.id.thingy_btn)
         bothBtn = findViewById(R.id.both_btn)
         dateSelector = findViewById(R.id.spinner1)
+        loadingMsg = findViewById(R.id.loading_msg)
 
         adapterArray = ArrayAdapter<String>(this, R.layout.spinner_item, datesSelectable)
         dateSelector.adapter = adapterArray
 
         timePeriod = "Past 5 minutes"
-        updateData()
 
         val username = intent.getStringExtra("name")
         title.text = String.format("%s's\nHistorical Data:", username)
@@ -314,6 +318,7 @@ class HistoricalData : AppCompatActivity() {
 
                 Log.d("PDIOT_DB", "READ_RESULT_HIS => ${historicalDataMap.size}")
                 Log.d("PDIOT_DB", "READ_RESULT_MOV => ${movementMap}")
+                loadingMsg.text = "Done"
                 setData()
             }
             .addOnFailureListener { exception ->
