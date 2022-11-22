@@ -61,4 +61,16 @@
     <string name="personal_tasks">Personal Tasks</string>
     <string name="historical_data">Historical Data</string>
     <string name="sign_out">Sign out</string>
+
+    <string-array name="dates">
+        <item>Past 5 minutes</item>
+        <item>Past 10 minutes</item>
+        <item>Past 30 minutes</item>
+        <item>Past 1 hour</item>
+        <item>Past 3 hours</item>
+        <item>Past 6 hours</item>
+        <item>Past 12 hours</item>
+        <item>Past 24 hours</item>
+        <item>Past 7 days</item>
+    </string-array>
 </resources>

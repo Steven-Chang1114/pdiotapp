@@ -4,9 +4,11 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
+import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
@@ -18,6 +20,7 @@ class SignUp : AppCompatActivity() {
     lateinit var emailField: TextView
     lateinit var passwordField: TextView
     lateinit var signupBtn: Button
+    lateinit var backBtn : ImageView
 
     private lateinit var auth: FirebaseAuth
 
@@ -29,8 +32,17 @@ class SignUp : AppCompatActivity() {
         emailField = findViewById(R.id.email)
         passwordField = findViewById(R.id.password)
         signupBtn = findViewById(R.id.signup_btn)
+        backBtn = findViewById(R.id.back_btn)
 
         auth = Firebase.auth
+
+        backBtn.setOnClickListener {
+            this.finish()
+            val intent = Intent(this, MainActivity::class.java)
+
+            startActivity(intent)
+            overridePendingTransition(R.anim.right_to_left, R.anim.left_to_right);
+        }
 
         signupBtn.setOnClickListener {
             val username = usernameField.text.toString().trim()

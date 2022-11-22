@@ -7,7 +7,6 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.Button
-import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
@@ -50,7 +49,7 @@ class MainActivity : AppCompatActivity() {
         googleSignInClient = GoogleSignIn.getClient(this, gso)
 
         val firebaseAccount = auth.currentUser
-        val googleAuthAccount = GoogleSignIn.getLastSignedInAccount(this);
+        val googleAuthAccount = GoogleSignIn.getLastSignedInAccount(this)
         if (googleAuthAccount != null) {
             Log.d("PDIOT_FIREBASE_AUTH", "Google autodirect")
             googleNavigateToMainPage(googleAuthAccount)
@@ -72,22 +71,29 @@ class MainActivity : AppCompatActivity() {
 
     fun setupClickListeners() {
         loginBtn.setOnClickListener {
-            auth.signInWithEmailAndPassword(email.text.toString().trim(), password.text.toString().trim())
-                .addOnCompleteListener(this) { task ->
-                    if (task.isSuccessful) {
-                        // Sign in success, update UI with the signed-in user's information
-                        Log.d("PDIOT_FIREBASE_AUTH", "signInWithEmail:success")
-                        val user = auth.currentUser
-                        if (user != null) {
-                            firebaseNavigateToMainPage(user)
+            if (email.text.toString().trim() == "" || password.text.toString().trim() == "") {
+                Toast.makeText(baseContext, "Please fill in the form above",
+                    Toast.LENGTH_SHORT).show()
+            } else {
+                auth.signInWithEmailAndPassword(email.text.toString().trim(), password.text.toString().trim())
+                    .addOnCompleteListener(this) { task ->
+                        if (task.isSuccessful) {
+                            // Sign in success, update UI with the signed-in user's information
+                            Log.d("PDIOT_FIREBASE_AUTH", "signInWithEmail:success")
+                            val user = auth.currentUser
+                            if (user != null) {
+                                firebaseNavigateToMainPage(user)
+                            }
+                        } else {
+                            // If sign in fails, display a message to the user.
+                            Log.w("PDIOT_FIREBASE_AUTH", "signInWithEmail:failure", task.exception)
+                            Toast.makeText(baseContext, task.exception.toString(),
+                                Toast.LENGTH_SHORT).show()
                         }
-                    } else {
-                        // If sign in fails, display a message to the user.
-                        Log.w("PDIOT_FIREBASE_AUTH", "signInWithEmail:failure", task.exception)
-                        Toast.makeText(baseContext, task.exception.toString(),
-                            Toast.LENGTH_SHORT).show()
                     }
-                }
+
+
+            }
         }
 
         signupBtn.setOnClickListener {

@@ -145,6 +145,7 @@ class HomePage : AppCompatActivity() {
 
         historyButton.setOnClickListener {
             val intent = Intent(this, HistoricalData::class.java)
+            intent.putExtra("name" , username)
             startActivity(intent)
         }
 
