@@ -94,6 +94,8 @@ class DemoApp : AppCompatActivity() {
 
         onThingyReceive()
 
+        thingyTimer = Instant.now().plusMillis(20000)
+
         thingyHandler = Handler()
 
         thingyRunnable = Runnable {
@@ -106,11 +108,13 @@ class DemoApp : AppCompatActivity() {
 
                 thingyStatus.text = "Thingy Status:\nDisconnected"
                 thingyStatus.setTextColor(Color.parseColor("#FD841F"))
+
+            } else {
+                thingyHandler.postDelayed(thingyRunnable, 1000)
             }
-            thingyHandler.postDelayed(thingyRunnable, 1000)
         }
 
-        thingyHandler.postDelayed(thingyRunnable, 20000)
+        thingyHandler.postDelayed(thingyRunnable, 1000)
 
     }
 
