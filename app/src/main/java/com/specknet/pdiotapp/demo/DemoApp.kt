@@ -25,15 +25,9 @@ import com.google.firebase.ktx.Firebase
 import com.google.gson.Gson
 import com.specknet.pdiotapp.HomePage
 import com.specknet.pdiotapp.R
-import com.specknet.pdiotapp.ml.RespeckModel
-import com.specknet.pdiotapp.ml.ThingyModel
 import com.specknet.pdiotapp.utils.Constants
 import com.specknet.pdiotapp.utils.RESpeckLiveData
 import com.specknet.pdiotapp.utils.ThingyLiveData
-import org.tensorflow.lite.DataType
-import org.tensorflow.lite.Interpreter
-import org.tensorflow.lite.support.tensorbuffer.TensorBuffer
-import java.nio.FloatBuffer
 import java.time.Instant
 import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
@@ -76,6 +70,7 @@ class DemoApp : AppCompatActivity() {
     lateinit var thingyLiveUpdateReceiver: BroadcastReceiver
     lateinit var looperRespeck: Looper
     lateinit var looperThingy: Looper
+    lateinit var thingyTimer: Instant
 
     val filterTestRespeck = IntentFilter(Constants.ACTION_RESPECK_LIVE_BROADCAST)
     val filterTestThingy = IntentFilter(Constants.ACTION_THINGY_BROADCAST)
@@ -95,6 +90,24 @@ class DemoApp : AppCompatActivity() {
         onrespeckReceive()
 
         onThingyReceive()
+
+        val handler = Handler()
+        handler.postDelayed(object : Runnable {
+            @RequiresApi(Build.VERSION_CODES.O)
+            override fun run() {
+                //your code
+                Log.i("PDIOT_DEMO_THINGY_TIMER", "${Instant.now()} => ${thingyTimer.toString()} = ${Instant.now().toEpochMilli() - thingyTimer.toEpochMilli()}")
+                if (isThingyActive && Instant.now().toEpochMilli() - thingyTimer.toEpochMilli() > 2000) {
+                    Log.i("PDIOT_DEMO_THINGY_ERR", "Thingy disconnected")
+                    classifiedMovementField.text = "Thingy is disconnected"
+                    actionImage.setBackgroundResource(R.drawable.ic_baseline_error_24)
+
+                    thingyStatus.text = "Thingy Status:\nDisconnected"
+                    thingyStatus.setTextColor(Color.parseColor("#FD841F"))
+                }
+                handler.postDelayed(this, 1000)
+            }
+        }, 20000)
 
     }
 
@@ -179,6 +192,7 @@ class DemoApp : AppCompatActivity() {
                                 classifiedMovementOnCloud()
                             }
 
+                            thingyTimer = Instant.now()
                             thingyCounter += 1
                         }
                     }
