@@ -149,6 +149,8 @@ class DemoApp : AppCompatActivity() {
                             if (thingyCounter == 0) {
                                 thingyStatus.text = "Thingy Status:\nStreaming"
                                 thingyStatus.setTextColor(Color.parseColor("#379237"))
+                                classifiedMovementField.text = "Classifying"
+                                actionImage.setBackgroundResource(R.drawable.ic_baseline_downloading_24)
                             }
 
                             // get all relevant intent contents
@@ -215,6 +217,8 @@ class DemoApp : AppCompatActivity() {
                             if (respeckCloudCounter == 0) {
                                 respeckStatus.text = "Respeck Status:\nStreaming"
                                 respeckStatus.setTextColor(Color.parseColor("#379237"))
+                                classifiedMovementField.text = "Classifying"
+                                actionImage.setBackgroundResource(R.drawable.ic_baseline_downloading_24)
                             }
 
                             // get all relevant intent contents
@@ -288,8 +292,6 @@ class DemoApp : AppCompatActivity() {
         val respeckList = respeckData.toList()
         val thingyList = thingyData.toList()
 
-
-
         if (isRespeckActive && isThingyActive) {
             if (respeckData.size >= 50 && thingyData.size >= 50) {
                 sendDataToAzure("both", thingyList, respeckList, "PDIOT_DEMO_RESULT_BOTH_CLOUD", "PDIOT_DEMO_RESULT_BOTH_ERR")
@@ -302,6 +304,14 @@ class DemoApp : AppCompatActivity() {
                         thingyData.removeAt(0)
                     }
                 }
+            } else {
+                actionImage.setBackgroundResource(R.drawable.ic_baseline_error_24)
+                if (respeckData.size < 50) {
+                    classifiedMovementField.text = "Respeck data is not ready yet"
+
+                } else if  (thingyData.size < 50) {
+                    classifiedMovementField.text = "Thingy data is not ready yet"
+                }
             }
         } else if (isRespeckActive) {
             if (respeckData.size >= 50) {
@@ -311,6 +321,9 @@ class DemoApp : AppCompatActivity() {
                         respeckData.removeAt(0)
                     }
                 }
+            } else if (respeckData.size < 50) {
+                actionImage.setBackgroundResource(R.drawable.ic_baseline_error_24)
+                classifiedMovementField.text = "Respeck data is not ready yet"
             }
         } else if (isThingyActive) {
             if (thingyData.size >= 50) {
@@ -320,6 +333,9 @@ class DemoApp : AppCompatActivity() {
                         thingyData.removeAt(0)
                     }
                 }
+            } else if  (thingyData.size < 50) {
+                actionImage.setBackgroundResource(R.drawable.ic_baseline_error_24)
+                classifiedMovementField.text = "Thingy data is not ready yet"
             }
         }
     }
