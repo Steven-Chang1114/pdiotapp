@@ -43,22 +43,19 @@ class DemoApp : AppCompatActivity() {
 
     // global graph variables
     lateinit var respeckData : MutableList<List<Float>>
-    lateinit var respeckBuffer: FloatBuffer
     lateinit var thingyData : MutableList<List<Float>>
-
-    lateinit var respeckModel: RespeckModel
-    lateinit var thingyModel: ThingyModel
+//    lateinit var respeckModel: RespeckModel
+//    lateinit var thingyModel: ThingyModel
 
     lateinit var lastMovement: ActionEnum
-    lateinit var tflite : Interpreter
 
     lateinit var userId : String
     lateinit var db : FirebaseFirestore
 
     lateinit var respeckActiveBtn: Button
     lateinit var thingyActiveBtn: Button
-    lateinit var cloudActiveBtn: Button
-    lateinit var localActiveBtn: Button
+//    lateinit var cloudActiveBtn: Button
+//    lateinit var localActiveBtn: Button
     lateinit var backBtn: ImageView
     lateinit var actionImage: ImageView
     lateinit var respeckStatus: TextView
@@ -67,7 +64,7 @@ class DemoApp : AppCompatActivity() {
 
     var isRespeckActive = false
     var isThingyActive = false
-    var isCloudActive = true
+//    var isCloudActive = true
 
     private lateinit var classifiedMovementField : TextView
 
@@ -90,8 +87,6 @@ class DemoApp : AppCompatActivity() {
         val policy = ThreadPolicy.Builder().permitAll().build()
 
         StrictMode.setThreadPolicy(policy)
-
-        respeckBuffer = FloatBuffer.allocate(500)
 
         setupPage()
 
@@ -179,11 +174,7 @@ class DemoApp : AppCompatActivity() {
                             }
 
                             if (thingyData.size >= 50) {
-                                if (isCloudActive) {
-                                    classifiedMovementOnCloud()
-                                } else {
-//                                classifiedMovementLocal()
-                                }
+                                classifiedMovementOnCloud()
                             }
 
                             thingyCounter += 1
@@ -246,11 +237,7 @@ class DemoApp : AppCompatActivity() {
                             }
 
                             if (respeckData.size >= 50) {
-                                if (isCloudActive) {
-                                    classifiedMovementOnCloud()
-                                } else {
-//                                classifiedMovementLocal(respeckBuffer)
-                                }
+                                classifiedMovementOnCloud()
                             }
 
                             respeckCloudCounter += 1
@@ -270,36 +257,38 @@ class DemoApp : AppCompatActivity() {
     }
 
 
-    @RequiresApi(Build.VERSION_CODES.O)
-    private fun classifiedMovementLocal(respeckBuffer: FloatBuffer) {
-        if (isRespeckActive) {
-            val inputArray = respeckBuffer.array().sliceArray(IntRange(0, 299))
-            val inputFeature0 = TensorBuffer.createFixedSize(intArrayOf(1, 50, 6), DataType.FLOAT32)
-            inputFeature0.loadArray(inputArray)
-
-            respeckBuffer.clear()
-
-            val output = respeckModel.process(inputFeature0).outputFeature0AsTensorBuffer.floatArray
-//            output.indexOf(output.max()!!)
-
-            val outputList = output.toList()
-            val movementIdx = outputList.indexOf(outputList.maxOrNull() ?: 0)
-            val currentMovement = selectMovements(movementIdx)
-
-            Log.i("PDIOT_DEMO_RESULT_RES_Local", currentMovement.movement)
-
-            lastMovement = currentMovement
-            updatePage(lastMovement)
-        } else if (isThingyActive) {
-
-        }
-    }
+//    @RequiresApi(Build.VERSION_CODES.O)
+//    private fun classifiedMovementLocal(respeckBuffer: FloatBuffer) {
+//        if (isRespeckActive) {
+//            val inputArray = respeckBuffer.array().sliceArray(IntRange(0, 299))
+//            val inputFeature0 = TensorBuffer.createFixedSize(intArrayOf(1, 50, 6), DataType.FLOAT32)
+//            inputFeature0.loadArray(inputArray)
+//
+//            respeckBuffer.clear()
+//
+//            val output = respeckModel.process(inputFeature0).outputFeature0AsTensorBuffer.floatArray
+////            output.indexOf(output.max()!!)
+//
+//            val outputList = output.toList()
+//            val movementIdx = outputList.indexOf(outputList.maxOrNull() ?: 0)
+//            val currentMovement = selectMovements(movementIdx)
+//
+//            Log.i("PDIOT_DEMO_RESULT_RES_Local", currentMovement.movement)
+//
+//            lastMovement = currentMovement
+//            updatePage(lastMovement)
+//        } else if (isThingyActive) {
+//
+//        }
+//    }
 
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun classifiedMovementOnCloud() {
         val respeckList = respeckData.toList()
         val thingyList = thingyData.toList()
+
+
 
         if (isRespeckActive && isThingyActive) {
             if (respeckData.size >= 50 && thingyData.size >= 50) {
@@ -422,47 +411,47 @@ class DemoApp : AppCompatActivity() {
             thingyData = mutableListOf<List<Float>>()
         }
 
-        cloudActiveBtn.setOnClickListener {
-            if (!isCloudActive)  {
-                isCloudActive = true
-
-                cloudActiveBtn.setBackgroundResource(R.drawable.hardware_button_active)
-                localActiveBtn.setBackgroundResource(R.drawable.hardware_button_inactive)
-            }
-        }
-
-        localActiveBtn.setOnClickListener {
-            if (isCloudActive) {
-                isCloudActive = false
-
-                cloudActiveBtn.setBackgroundResource(R.drawable.hardware_button_inactive)
-                localActiveBtn.setBackgroundResource(R.drawable.hardware_button_active)
-            }
-        }
-    }
-
-    private fun classifyMovement(floatArrayBuffer: FloatBuffer) {
-//        if (counter < 50) {
-//            return updatePage(lastMovement)
+//        cloudActiveBtn.setOnClickListener {
+//            if (!isCloudActive)  {
+//                isCloudActive = true
+//
+//                cloudActiveBtn.setBackgroundResource(R.drawable.hardware_button_active)
+//                localActiveBtn.setBackgroundResource(R.drawable.hardware_button_inactive)
+//            }
 //        }
+
+//        localActiveBtn.setOnClickListener {
+//            if (isCloudActive) {
+//                isCloudActive = false
 //
-//        val inputArray = floatArrayBuffer.array().sliceArray(IntRange(0, 299))
-//        val inputFeature0 = TensorBuffer.createFixedSize(intArrayOf(1, 50, 6), DataType.FLOAT32)
-//        inputFeature0.loadArray(inputArray)
-//
-//        counter = 0
-//        floatArrayBuffer.clear()
-//
-//        val output = model.process(inputFeature0).outputFeature0AsTensorBuffer.floatArray
-//
-//        val movementIdx = output.indexOf(output.max()!!)
-//
-//        Log.i("OUTPUT", "Predicted movement is ${movementIdx}")
-//        val currentMovement = selectMovements(movementIdx)
-//
-//        lastMovement = currentMovement
-//        updatePage(currentMovement)
+//                cloudActiveBtn.setBackgroundResource(R.drawable.hardware_button_inactive)
+//                localActiveBtn.setBackgroundResource(R.drawable.hardware_button_active)
+//            }
+//        }
     }
+
+//    private fun classifyMovement(floatArrayBuffer: FloatBuffer) {
+////        if (counter < 50) {
+////            return updatePage(lastMovement)
+////        }
+////
+////        val inputArray = floatArrayBuffer.array().sliceArray(IntRange(0, 299))
+////        val inputFeature0 = TensorBuffer.createFixedSize(intArrayOf(1, 50, 6), DataType.FLOAT32)
+////        inputFeature0.loadArray(inputArray)
+////
+////        counter = 0
+////        floatArrayBuffer.clear()
+////
+////        val output = model.process(inputFeature0).outputFeature0AsTensorBuffer.floatArray
+////
+////        val movementIdx = output.indexOf(output.max()!!)
+////
+////        Log.i("OUTPUT", "Predicted movement is ${movementIdx}")
+////        val currentMovement = selectMovements(movementIdx)
+////
+////        lastMovement = currentMovement
+////        updatePage(currentMovement)
+//    }
 
     private fun selectMovements(idx: Int) : ActionEnum {
         return when (idx) {
@@ -486,8 +475,8 @@ class DemoApp : AppCompatActivity() {
 
     private fun setupPage() {
         lastMovement = ActionEnum.GENERAL_MOVEMENT
-        respeckModel = RespeckModel.newInstance(this)
-        thingyModel = ThingyModel.newInstance(this)
+//        respeckModel = RespeckModel.newInstance(this)
+//        thingyModel = ThingyModel.newInstance(this)
 
         db = Firebase.firestore
 
@@ -498,8 +487,8 @@ class DemoApp : AppCompatActivity() {
         thingyStatus = findViewById(R.id.thingy_status)
         respeckActiveBtn = findViewById(R.id.respeck_button)
         thingyActiveBtn = findViewById(R.id.thingy_button)
-        cloudActiveBtn = findViewById(R.id.azure_button)
-        localActiveBtn = findViewById(R.id.local_button)
+//        cloudActiveBtn = findViewById(R.id.azure_button)
+//        localActiveBtn = findViewById(R.id.local_button)
         classifiedMovementField = findViewById(R.id.movement)
         actionImage = findViewById(R.id.movement_img)
         backBtn = findViewById(R.id.back_btn)
@@ -557,8 +546,8 @@ class DemoApp : AppCompatActivity() {
         respeckData = mutableListOf()
         thingyData = mutableListOf()
 
-        respeckModel.close()
-        thingyModel.close()
+//        respeckModel.close()
+//        thingyModel.close()
 
         looperRespeck.quit()
         looperThingy.quit()
