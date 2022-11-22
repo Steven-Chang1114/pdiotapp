@@ -36,6 +36,7 @@ import com.specknet.pdiotapp.utils.ThingyPacketHandler;
 import com.specknet.pdiotapp.utils.Utils;
 
 import java.util.Arrays;
+import java.util.Objects;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.UUID;
@@ -303,8 +304,7 @@ public class BluetoothSpeckService extends Service {
             if ((mIsRESpeckFound || !mIsRESpeckEnabled) && (mIsThingyFound || !mIsThingyEnabled)) {
                 scanSubscription.unsubscribe();
             }
-
-            if (mIsRESpeckEnabled && !mIsRESpeckFound) {
+            if (mIsRESpeckEnabled && !mIsRESpeckFound && !Objects.equals(RESPECK_UUID, "")) {
                 if (RESPECK_UUID.contains(":")) {
                     // New BLE address
                     if (rxBleScanResult.getBleDevice().getMacAddress().equalsIgnoreCase(RESPECK_UUID)) {

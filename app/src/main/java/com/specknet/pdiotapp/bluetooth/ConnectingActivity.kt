@@ -117,25 +117,25 @@ class ConnectingActivity : AppCompatActivity() {
             )
         }
 
-        respeckID.addTextChangedListener(object : TextWatcher {
-            override fun onTextChanged(cs: CharSequence, start: Int, before: Int, count: Int) {
-                if (cs.toString().trim().length != 17) {
-                    connectSensorsButton.isEnabled = false
-                    connectSensorsButton.isClickable = false
-                } else {
-                    connectSensorsButton.isEnabled = true
-                    connectSensorsButton.isClickable = true
-                }
-            }
-
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-
-            }
-
-            override fun afterTextChanged(p0: Editable?) {
-
-            }
-        })
+//        respeckID.addTextChangedListener(object : TextWatcher {
+//            override fun onTextChanged(cs: CharSequence, start: Int, before: Int, count: Int) {
+//                if (cs.toString().trim().length != 17) {
+//                    connectSensorsButton.isEnabled = false
+//                    connectSensorsButton.isClickable = false
+//                } else {
+//                    connectSensorsButton.isEnabled = true
+//                    connectSensorsButton.isClickable = true
+//                }
+//            }
+//
+//            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+//
+//            }
+//
+//            override fun afterTextChanged(p0: Editable?) {
+//
+//            }
+//        })
 
         respeckID.filters = arrayOf<InputFilter>(AllCaps())
 
@@ -157,15 +157,15 @@ class ConnectingActivity : AppCompatActivity() {
     fun startSpeckService() {
         // TODO if it's not already running
         val isServiceRunning = Utils.isServiceRunning(BluetoothSpeckService::class.java, applicationContext)
-        Log.i("service","isServiceRunning = " + isServiceRunning)
+        Log.i("pdiot_service","isServiceRunning = " + isServiceRunning)
 
         if (!isServiceRunning) {
-            Log.i("service", "Starting BLT service")
+            Log.i("pdiot_service", "Starting BLT service")
             val simpleIntent = Intent(this, BluetoothSpeckService::class.java)
             this.startService(simpleIntent)
         }
         else {
-            Log.i("service", "Service already running, restart")
+            Log.i("pdiot_service", "Service already running, restart")
             this.stopService(Intent(this, BluetoothSpeckService::class.java))
             Toast.makeText(this, "restarting service with new sensors", Toast.LENGTH_SHORT).show()
             this.startService(Intent(this, BluetoothSpeckService::class.java))
