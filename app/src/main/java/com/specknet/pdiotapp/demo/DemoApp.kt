@@ -1,25 +1,22 @@
 package com.specknet.pdiotapp.demo
 
-import android.annotation.SuppressLint
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.graphics.Color
 import android.os.*
+import android.os.StrictMode.ThreadPolicy
 import android.util.Log
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import com.github.kittinunf.fuel.core.extensions.jsonBody
 import com.github.kittinunf.fuel.httpPost
 import com.github.kittinunf.result.onError
 import com.github.kittinunf.result.success
-import com.github.mikephil.charting.data.LineData
-import com.github.mikephil.charting.data.LineDataSet
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -28,7 +25,6 @@ import com.google.firebase.ktx.Firebase
 import com.google.gson.Gson
 import com.specknet.pdiotapp.HomePage
 import com.specknet.pdiotapp.R
-import com.specknet.pdiotapp.SignUp
 import com.specknet.pdiotapp.ml.RespeckModel
 import com.specknet.pdiotapp.ml.ThingyModel
 import com.specknet.pdiotapp.utils.Constants
@@ -37,11 +33,11 @@ import com.specknet.pdiotapp.utils.ThingyLiveData
 import org.tensorflow.lite.DataType
 import org.tensorflow.lite.Interpreter
 import org.tensorflow.lite.support.tensorbuffer.TensorBuffer
-import org.w3c.dom.Text
 import java.nio.FloatBuffer
 import java.time.Instant
 import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
+
 
 class DemoApp : AppCompatActivity() {
 
@@ -90,6 +86,10 @@ class DemoApp : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_demo)
+
+        val policy = ThreadPolicy.Builder().permitAll().build()
+
+        StrictMode.setThreadPolicy(policy)
 
         respeckBuffer = FloatBuffer.allocate(500)
 
@@ -149,42 +149,45 @@ class DemoApp : AppCompatActivity() {
                     Log.d("Thingy_demo_Live", "onReceive: liveData = " + liveData)
 
                     if (isThingyActive) {
-                        if (thingyCounter == 0) {
-                            thingyStatus.text = "Thingy Status:\nStreaming"
-                            thingyStatus.setTextColor(Color.parseColor("#379237"))
-                        }
 
-                        // get all relevant intent contents
-                        val timestamp = liveData.phoneTimestamp.toFloat()
-
-                        val accelX = liveData.accelX
-                        val accelY = liveData.accelY
-                        val accelZ = liveData.accelZ
-
-                        val gyroX = liveData.gyro.x
-                        val gyroY = liveData.gyro.y
-                        val gyroZ = liveData.gyro.z
-
-                        val magX = liveData.mag.x
-                        val magY = liveData.mag.y
-                        val magZ = liveData.mag.z
-
-                        val thingyArr = listOf(timestamp, accelX, accelY, accelZ, gyroX, gyroY, gyroZ, magX, magY, magZ)
-
-                        thingyData.add(thingyArr)
-                        while (thingyData.size > 50) {
-                            thingyData.removeAt(0)
-                        }
-
-                        if (thingyData.size >= 50) {
-                            if (isCloudActive) {
-                                classifiedMovementOnCloud()
-                            } else {
-//                                classifiedMovementLocal()
+                        runOnUiThread {
+                            if (thingyCounter == 0) {
+                                thingyStatus.text = "Thingy Status:\nStreaming"
+                                thingyStatus.setTextColor(Color.parseColor("#379237"))
                             }
-                        }
 
-                        thingyCounter += 1
+                            // get all relevant intent contents
+                            val timestamp = liveData.phoneTimestamp.toFloat()
+
+                            val accelX = liveData.accelX
+                            val accelY = liveData.accelY
+                            val accelZ = liveData.accelZ
+
+                            val gyroX = liveData.gyro.x
+                            val gyroY = liveData.gyro.y
+                            val gyroZ = liveData.gyro.z
+
+                            val magX = liveData.mag.x
+                            val magY = liveData.mag.y
+                            val magZ = liveData.mag.z
+
+                            val thingyArr = listOf(timestamp, accelX, accelY, accelZ, gyroX, gyroY, gyroZ, magX, magY, magZ)
+
+                            thingyData.add(thingyArr)
+                            while (thingyData.size > 50) {
+                                thingyData.removeAt(0)
+                            }
+
+                            if (thingyData.size >= 50) {
+                                if (isCloudActive) {
+                                    classifiedMovementOnCloud()
+                                } else {
+//                                classifiedMovementLocal()
+                                }
+                            }
+
+                            thingyCounter += 1
+                        }
                     }
 
                 }
@@ -216,39 +219,42 @@ class DemoApp : AppCompatActivity() {
                     Log.d("Respeck_demo_Live", "onReceive: liveData = " + liveData)
 
                     if (isRespeckActive) {
-                        if (respeckCloudCounter == 0) {
-                            respeckStatus.text = "Respeck Status:\nStreaming"
-                            respeckStatus.setTextColor(Color.parseColor("#379237"))
-                        }
 
-                        // get all relevant intent contents
-                        val timestamp = liveData.phoneTimestamp.toFloat()
+                        runOnUiThread {
+                            if (respeckCloudCounter == 0) {
+                                respeckStatus.text = "Respeck Status:\nStreaming"
+                                respeckStatus.setTextColor(Color.parseColor("#379237"))
+                            }
 
-                        val accelX = liveData.accelX
-                        val accelY = liveData.accelY
-                        val accelZ = liveData.accelZ
+                            // get all relevant intent contents
+                            val timestamp = liveData.phoneTimestamp.toFloat()
 
-                        val gyroX = liveData.gyro.x
-                        val gyroY = liveData.gyro.y
-                        val gyroZ = liveData.gyro.z
+                            val accelX = liveData.accelX
+                            val accelY = liveData.accelY
+                            val accelZ = liveData.accelZ
 
-                        val resultArr = listOf(timestamp, accelX, accelY, accelZ, gyroX, gyroY, gyroZ)
+                            val gyroX = liveData.gyro.x
+                            val gyroY = liveData.gyro.y
+                            val gyroZ = liveData.gyro.z
+
+                            val resultArr = listOf(timestamp, accelX, accelY, accelZ, gyroX, gyroY, gyroZ)
 //                        respeckBuffer.put(floatArrayOf(accelX, accelY, accelZ, gyroX, gyroY, gyroZ))
 
-                        respeckData.add(resultArr)
-                        while (respeckData.size > 50) {
-                            respeckData.removeAt(0)
-                        }
-
-                        if (respeckData.size >= 50) {
-                            if (isCloudActive) {
-                                classifiedMovementOnCloud()
-                            } else {
-//                                classifiedMovementLocal(respeckBuffer)
+                            respeckData.add(resultArr)
+                            while (respeckData.size > 50) {
+                                respeckData.removeAt(0)
                             }
-                        }
 
-                        respeckCloudCounter += 1
+                            if (respeckData.size >= 50) {
+                                if (isCloudActive) {
+                                    classifiedMovementOnCloud()
+                                } else {
+//                                classifiedMovementLocal(respeckBuffer)
+                                }
+                            }
+
+                            respeckCloudCounter += 1
+                        }
                     }
 
                 }
@@ -545,7 +551,6 @@ class DemoApp : AppCompatActivity() {
     }
 
     override fun onDestroy() {
-        super.onDestroy()
         unregisterReceiver(respeckLiveUpdateReceiver)
         unregisterReceiver(thingyLiveUpdateReceiver)
 
@@ -557,6 +562,8 @@ class DemoApp : AppCompatActivity() {
 
         looperRespeck.quit()
         looperThingy.quit()
+
+        super.onDestroy()
     }
 
 }
