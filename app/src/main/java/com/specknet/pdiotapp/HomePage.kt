@@ -130,7 +130,8 @@ class HomePage : AppCompatActivity() {
         }
 
         liveProcessingButton.setOnClickListener {
-
+            val intent = Intent(this, LiveDataActivity::class.java)
+            startActivity(intent)
         }
 
         pairingButton.setOnClickListener {
