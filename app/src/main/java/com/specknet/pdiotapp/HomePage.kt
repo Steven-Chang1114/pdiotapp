@@ -47,6 +47,7 @@ class HomePage : AppCompatActivity() {
     lateinit var recordButton: View
     lateinit var demoButton: View
     lateinit var historyButton: View
+    lateinit var deviceGuideButton: View
     lateinit var signoutButton: Button
 
     lateinit var username: String
@@ -101,6 +102,7 @@ class HomePage : AppCompatActivity() {
         demoButton = findViewById(R.id.demo_button)
         signoutButton = findViewById(R.id.signout_button)
         historyButton = findViewById(R.id.history_button)
+        deviceGuideButton = findViewById(R.id.instruction_button)
 
         welcomeMsg = findViewById(R.id.welcome_msg)
 
@@ -122,9 +124,13 @@ class HomePage : AppCompatActivity() {
     }
 
     fun setupClickListeners() {
-        liveProcessingButton.setOnClickListener {
-            val intent = Intent(this, LiveDataActivity::class.java)
+        deviceGuideButton.setOnClickListener {
+            val intent = Intent(this, DeviceGuide::class.java)
             startActivity(intent)
+        }
+
+        liveProcessingButton.setOnClickListener {
+
         }
 
         pairingButton.setOnClickListener {
