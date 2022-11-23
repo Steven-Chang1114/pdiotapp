@@ -285,6 +285,77 @@
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
                     <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/instruction_button"
+                        android:layout_width="120dp"
+                        android:layout_height="200dp"
+                        android:layout_marginStart="20dp"
+                        android:background="@drawable/demo_button">
+
+                        <ImageView
+                            android:id="@+id/imageView20"
+                            android:layout_width="200dp"
+                            android:layout_height="200dp"
+                            android:layout_marginStart="125dp"
+                            android:layout_marginBottom="170dp"
+                            android:src="@drawable/dotts"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            />
+
+                        <ImageView
+                            android:id="@+id/imageView21"
+                            android:layout_width="200dp"
+                            android:layout_height="200dp"
+                            android:layout_marginEnd="200dp"
+                            android:layout_marginTop="228dp"
+                            android:src="@drawable/dotts"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            />
+
+                        <ImageView
+                            android:id="@+id/instruction_view"
+                            android:layout_width="220dp"
+                            android:layout_height="220dp"
+                            android:layout_marginTop="20dp"
+                            android:layout_marginEnd="75dp"
+                            android:src="@drawable/device_guide"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <TextView
+                            android:id="@+id/instruction_title"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="30dp"
+                            android:layout_marginBottom="60dp"
+                            android:fontFamily="sans-serif-medium"
+                            android:lineSpacingExtra="10sp"
+                            android:shadowColor="#170200"
+                            android:shadowDx="1"
+                            android:shadowDy="1"
+                            android:shadowRadius="1"
+                            android:text="Device\nGuide"
+                            android:textAlignment="textEnd"
+                            android:textColor="#FEF5E6"
+                            android:textSize="20sp"
+                            android:textStyle="bold"
+                            android:typeface="sans"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
                         android:id="@+id/record_button"
                         android:layout_width="120dp"
                         android:layout_height="200dp"

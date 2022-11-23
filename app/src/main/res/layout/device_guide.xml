@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="#FEF5E6">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                android:layout_marginBottom="30dp"
+                android:text="Sensors Calibration Guide"
+                android:textColor="#170200"
+                android:textSize="28dp"
+                android:textStyle="bold"
+                android:typeface="sans"
+                android:layout_marginStart="30dp"
+                android:layout_marginEnd="30dp"
+                app:layout_constraintBottom_toTopOf="@+id/respack_title"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"/>
+
+            <TextView
+                android:id="@+id/respack_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Respeck"
+                android:layout_marginBottom="20dp"
+                android:textColor="#170200"
+                android:textSize="25sp"
+                android:textStyle="bold"
+                android:typeface="sans"
+                android:layout_marginStart="30dp"
+                android:layout_marginEnd="30dp"
+                app:layout_constraintBottom_toTopOf="@+id/respack"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/title"/>
+
+            <TextView
+                android:id="@+id/respack"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="30dp"
+                android:layout_marginEnd="30dp"
+                android:text="Everyone will need to wear the sensors in the same places to ensure consistency across the data.\n\nThe Respeck sensor should be placed on the left lower ribcage, with the blue half against the skin. Make sure that the Respeck is first put into the small plastic bag provided. You should be able to read the Respeck label when placing it on your chest – this ensures the sensor is held the right way up, as shown in the figure below.\n\nSecure the sensor to the chest using the MeFix tape provided. If you run out of tape you should let us know and we will provide you with more."
+                android:textColor="#170200"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                android:typeface="sans"
+                app:layout_constraintBottom_toTopOf="@+id/respeck_img"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/respack_title" />
+
+            <ImageView
+                android:id="@+id/respeck_img"
+                android:layout_width="300dp"
+                android:layout_height="300dp"
+                app:srcCompat="@drawable/respeck_placement"
+                app:layout_constraintBottom_toTopOf="@+id/thingy_title"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/respack"/>
+
+            <TextView
+                android:id="@+id/thingy_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Thingy"
+                android:layout_marginBottom="20dp"
+                android:textColor="#170200"
+                android:textSize="25sp"
+                android:textStyle="bold"
+                android:typeface="sans"
+                android:layout_marginStart="30dp"
+                android:layout_marginEnd="30dp"
+                app:layout_constraintBottom_toTopOf="@+id/thingy"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/respeck_img"/>
+
+
+            <TextView
+                android:id="@+id/thingy"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="The Thingy sensor should be placed in the front right pocket of your trousers, with the circle placed in the upper right corner and the USB port facing downwards."
+                android:textColor="#170200"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                android:typeface="sans"
+                android:layout_marginStart="30dp"
+                android:layout_marginEnd="30dp"
+                app:layout_constraintBottom_toTopOf="@+id/thingy_img"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/thingy_title"/>
+
+            <ImageView
+                android:id="@+id/thingy_img"
+                android:layout_width="300dp"
+                android:layout_height="300dp"
+                android:layout_marginBottom="30dp"
+                app:srcCompat="@drawable/thingy_placement"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/thingy"/>
+
+        </LinearLayout>
+    </ScrollView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
